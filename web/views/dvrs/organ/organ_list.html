@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>FH Admin</title>
+		<!-- HTML5 Shim and Respond.js IE10 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 10]>
+		<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+		<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+		<![endif]-->
+		<!-- Meta -->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="author" content="FH Admin QQ313596790" />
+
+		<link rel="icon" href="../../../assets/images/favicon.ico" type="image/x-icon">
+		<link rel="stylesheet" href="../../../assets/fonts/material/css/materialdesignicons.min.css">
+		<link rel="stylesheet" href="../../../assets/fonts/fontawesome/css/fontawesome-all.min.css">
+		<link rel="stylesheet" href="../../../assets/plugins/animation/css/animate.min.css">
+		<link rel="stylesheet" href="../../../assets/css/style.css">
+
+		<!-- vue -->
+		<script src="../../../assets/js-vue/vue.js"></script>
+		<!--全局配置-->
+		<script src="../../../assets/js-v/config.js"></script>
+		<style type="text/css">
+			.nav-tabs>li>a,
+			.nav-tabs>li>a:focus {
+				border-radius: 0 !important;
+				border-color: #c5d0dc;
+				background-color: #F9F9F9;
+				color: #999;
+				margin-right: -1px;
+				line-height: 18px;
+				position: relative;
+			}
+
+			.nav-tabs>li.active>a,
+			.nav-tabs>li.active>a:hover,
+			.nav-tabs>li.active>a:focus {
+				color: #576373;
+				border-color: #c5d0dc;
+				border-top: 2px solid #23b7e5;
+				border-bottom-color: transparent;
+				background-color: #FFF;
+				z-index: 1;
+				line-height: 18px;
+				margin-top: -1px;
+				box-shadow: 0 -2px 3px 0 rgb(0 0 0 / 15%);
+			}
+
+			.nav-tabs {
+				border-color: #C5D0DC;
+				margin-bottom: 0 !important;
+				margin-left: 0;
+				position: relative;
+				top: 1px;
+			}
+
+			.nav-tabs>li>a {
+				padding: 7px 12px 8px;
+			}
+
+			.list {
+				padding-top: 5px;
+			}
+
+			#g1,
+			#g2,
+			#g3,
+			#g4 {
+				display: none;
+			}
+
+			.show {
+				display: block !important;
+			}
+		</style>
+
+	</head>
+
+	<body>
+
+		<!-- [加载状态 ] start -->
+		<div class="loader-bg">
+			<div class="loader-track">
+				<div class="loader-fill"></div>
+			</div>
+		</div>
+		<!-- [ 加载状态  ] End -->
+
+		<!-- [ 主内容区 ] start -->
+		<div class="pcoded-wrapper" id="app">
+			<div class="pcoded-content">
+				<div class="pcoded-inner-content">
+					<div class="main-body">
+						<div class="page-wrapper">
+							<!-- [ Main Content ] start -->
+							<div class="row">
+
+								<!-- [ Hover-table ] start -->
+								<div class="col-xl-12">
+									<div class="card">
+
+										<div id="" class="list">
+											<ul class="nav nav-tabs" id="gList">
+
+												<li v-for="(site,index) in sites" v-on:click="changeLi(index)"
+													:class="{'active':Index===index}"><a
+														:href="site.url">{{site.name}}</a></li>
+											</ul>
+										</div>
+
+										<!-- 检索  -->
+										<div id="g2" :class="{'show':Index===0}">
+											<div style="padding-left: 20px;padding-top: 15px;">
+												<table style="margin-top:5px;">
+													<tr>
+														<td>
+															<div class="input-group input-group-sm mb-3">
+																<input class="form-control" type="text"
+																	v-model="KEYWORDS" placeholder="这里输入关键词" />
+															</div>
+														</td>
+														<td style="vertical-align:top;padding-left:5px;">
+															<a class="btn btn-light btn-sm"
+																v-on:click="getList(ORGAN_ID)"
+																style="width: 23px;height:30px;margin-top:1px;"
+																title="检索"><i style="margin-top:-3px;margin-left: -6px;"
+																	class="feather icon-search"></i></a>
+															<a v-show="toExcel" class="btn btn-light btn-sm"
+																v-on:click="goExcel"
+																style="width: 23px;height:30px;margin-top:1px;margin-left: -9px;"
+																title="导出到excel表格">
+																<i style="margin-top:-3px;margin-left: -6px;"
+																	class="mdi mdi-cloud-download"></i>
+															</a>
+														</td>
+
+														<!-- <td>关联终端</td> -->
+
+
+														<td v-show="loading">
+															<!-- [加载状态 ] start -->
+															<div class="d-flex justify-content-center"
+																style="margin-top:-10px;">
+																<div class="spinner-grow spinner-grow-sm" role="status">
+																	<span class="sr-only">Loading...</span>
+																</div>
+															</div>
+															<!-- [ 加载状态  ] End -->
+														</td>
+													</tr>
+												</table>
+											</div>
+											<!-- 检索  -->
+											<div class="card-block table-border-style" style="margin-top: -15px">
+												<div class="table-responsive">
+													<table class="table table-hover">
+														<thead>
+															<tr>
+																<th style="width:50px;">NO</th>
+																<th>名称</th>
+																<!-- <th>科室名称</th> -->
+																<th>科室编码</th>
+																<th>NO_CASE</th>
+																<th>所在地址</th>
+																<th>联系电话</th>
+																<!-- <th>POS_X</th>
+															
+															<th>POS_Y</th>
+															<th>COMPANY_ID</th> -->
+																<!-- <th>POS_Y</th> -->
+																<th>院区类别</th>
+																<th>操作</th>
+															</tr>
+														</thead>
+
+														<tbody>
+															<!-- 开始循环 -->
+															<template v-for="(data,index) in varList">
+																<tr>
+																	<td>{{page.showCount*(page.currentPage-1)+index+1}}
+																	</td>
+																	<td>
+																		<a>{{data.NAME}}
+																			<!--style="cursor:pointer;" v-on:click="getList(data.ORGAN_ID,data.LEVEL)" <i class="feather icon-chevron-down"></i> -->
+																		</a>
+																	</td>
+																	<!-- <td>{{data.ORGAN_NAME}}</td> -->
+																	<td>{{data.CODE}}</td>
+																	<td>{{data.NO_CASE}}</td>
+																	<td>{{data.ADDR}}</td>
+																	<td>{{data.TELPHONE}}</td>
+																	<!-- <td>{{data.POS_X}}</td>
+																	<td>{{data.POS_Y}}</td>
+																	<td>{{data.COMPANY_ID}}</td> -->
+																	<!-- <td>{{data.TYPE}}</td> -->
+																	<td>{{data.MANAGE_NAME}}</td>
+																	<td>
+																		<a v-show="cha" title="查看"
+																			v-on:click="goView(data.ORGAN_ID)"
+																			style="cursor:pointer;"><i
+																				class="feather icon-eye"></i></a>
+																		<a v-show="edit" title="修改"
+																			v-on:click="goEdit(data.ORGAN_ID)"
+																			style="cursor:pointer;"><i
+																				class="feather icon-edit-2"></i></a>
+																		<a v-show="del" title="删除"
+																			v-on:click="goDel(data.ORGAN_ID)"
+																			style="cursor:pointer;"><i
+																				class="feather icon-x"></i></a>
+																	</td>
+																</tr>
+															</template>
+															<tr v-show="varList.length==0">
+																<td colspan="10">没有相关数据</td>
+															</tr>
+														</tbody>
+													</table>
+
+													<table style="width:100%;margin-top:15px;">
+														<tr>
+															<td style="vertical-align:top;">
+																<template v-if="'' != ORGAN_ID">
+																	<a v-show="add" class="btn btn-light btn-sm"
+																		v-on:click="goAdd(ORGAN_ID)">新增</a>
+																</template>
+
+																<template v-if="'0' != ORGAN_ID">
+																	<a class="btn btn-light btn-sm"
+																		v-on:click="getList(PARENT_ID)">返回</a>
+																</template>
+															</td>
+
+
+															<td style="vertical-align:top;">
+																<div style="float: right;padding-top: 0px;margin-top: 0px;"
+																	v-html="page.pageStr"></div>
+															</td>
+														</tr>
+													</table>
+												</div>
+											</div>
+										</div>
+
+										<div id="g2" :class="{'show':Index===1}">
+											<div class="card-block table-border-style" style="margin-top: -15px">
+												<div class="table-responsive">
+													<table class="table table-hover">
+														<thead>
+															<tr>
+																<th style="width:50px;">NO</th>
+																<th>诊室名称</th>
+																<th>终端名称</th>
+																<th>终端编码</th>
+																<th>终端IP</th>
+																<th>终端位置</th>
+																<th>终端类型名称</th>
+																<th>操作</th>
+															</tr>
+														</thead>
+														<tbody>
+															<!-- 开始循环 -->
+															<template v-for="(data,index) in boxList">
+																<tr>
+																	<td scope="row">
+																		{{page.showCount*(page.currentPage-1)+index+1}}
+																	</td>
+																	<td>{{data.ORGAN_NAME}}</td>
+																	<td>{{data.BOX_NAME}}</td>
+																	<td>{{data.BOX_CODE}}</td>
+																	<td>{{data.BOX_IP}}</td>
+																	<td>{{data.BOX_ADDR}}</td>
+																	<td>{{data.DEVICE_NAME}}</td>
+																	<td>
+																		<a v-show="del" title="删除"
+																			v-on:click="goDelBox(data.BOX_MAPPING_ID)"
+																			style="cursor:pointer;"><i
+																				class="feather icon-x"></i></a>
+																	</td>
+																</tr>
+															</template>
+															<tr v-show="boxList.length==0">
+																<td colspan="10">没有相关数据</td>
+															</tr>
+														</tbody>
+													</table>
+													<table style="width:100%;margin-top:15px;">
+														<tr>
+															<td style="vertical-align:top;">
+																<template v-if="'' != ORGAN_ID">
+																	<a v-show="add" class="btn btn-light btn-sm"
+																		v-on:click="boxMapping(ORGAN_ID)">关联终端</a>
+																</template>
+															</td>
+															<td style="vertical-align:top;">
+																<div style="float: right;padding-top: 0px;margin-top: 0px;"
+																	v-html="page.pageStr"></div>
+															</td>
+														</tr>
+													</table>
+												</div>
+											</div>
+										</div>
+
+
+									</div>
+								</div>
+								<!-- [ Hover-table ] end -->
+
+							</div>
+							<!-- [ Main Content ] end -->
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- [ 主内容区 ] end -->
+
+		<script type="text/javascript" src="../../../assets/js/jquery-1.7.2.js"></script>
+		<script type="text/javascript" src="../../../assets/js/pre-loader.js"></script>
+		<script src="../../../assets/plugins/sweetalert/js/sweetalert.min.js"></script>
+		<!-- 表单验证提示 -->
+		<script src="../../../assets/js/jquery.tips.js"></script>
+
+		<script type="text/javascript">
+			var vm = new Vue({
+				el: '#app',
+
+				data: {
+					varList: [], //list
+					page: [], //分页类
+					KEYWORDS: '', //检索条件 关键词
+					ORGAN_ID: '', //主键ID
+					PARENT_ID: '0', //上级ID
+					showCount: -1, //每页显示条数(这个是系统设置里面配置的，初始为-1即可，固定此写法)
+					currentPage: 1, //当前页码
+					add: false, //增
+					del: false, //删
+					edit: false, //改
+					cha: false, //查
+					toExcel: false, //导出到excel权限
+					loading: false, //加载状态
+					ManageMax: 0,
+					Index: 0,
+					sites: [{
+						url: '#1',
+						name: '院区管理'
+					}, {
+						url: '#2',
+						name: '关联终端'
+					}],
+					boxList: []
+				},
+
+				methods: {
+
+					//初始执行
+					init() {
+						var id = this.getUrlKey('id'); //链接参数, 从树点过来
+						if (null != id) {
+							this.ORGAN_ID = id;
+						}
+						this.getManageMax();
+					},
+
+					changeLi: function(id) {
+						vm.Index = id;
+						vm.showCount = -1;
+						vm.currentPage = 1;
+						console.log(this.ORGAN_ID);
+						switch (id) {
+							case 0:
+								this.getList(this.ORGAN_ID);
+								break;
+							case 1:
+								this.getBoxList(this.ORGAN_ID);
+								break;
+							default:
+								break;
+						}
+					},
+
+					//获取关联终端列表
+					getBoxList: function(F_ID) {
+						this.ORGAN_ID = F_ID;
+						this.loading = true;
+						$.ajax({
+							xhrFields: {
+								withCredentials: true
+							},
+							type: "POST",
+							url: httpurl + 'box_mapping/list?showCount=' + this.showCount + '&currentPage=' +
+								this.currentPage,
+							data: {
+								KEYWORDS: this.KEYWORDS,
+								tm: new Date().getTime(),
+								ORGAN_ID: this.ORGAN_ID
+							},
+							dataType: "json",
+							success: function(data) {
+								if ("success" == data.result) {
+									vm.boxList = data.varList;
+									vm.page = data.page;
+									vm.hasButton();
+									vm.loading = false;
+								} else if ("exception" == data.result) {
+									showException("终端关联", data.exception); //显示异常
+								}
+							}
+						}).done().fail(function() {
+							swal("登录失效!", "请求服务器无响应，稍后再试", "warning");
+							setTimeout(function() {
+								window.location.href = "../../login.html";
+							}, 2000);
+						});
+					},
+
+
+					// 获取院区管理最大等级
+					getManageMax: function() {
+						$.ajax({
+							xhrFields: {
+								withCredentials: true
+							},
+							type: "POST",
+							url: httpurl + 'manage/getMax',
+							data: {},
+							dataType: "json",
+							success: function(data) {
+								if ("success" == data.result) {
+									vm.ManageMax = data.getManageMaxLevel;
+									console.log(vm.ManageMax);
+
+									vm.getList(vm.ORGAN_ID);
+								} else if ("exception" == data.result) {
+									showException("获取院区等级最大值", data.exception); //显示异常
+								}
+							}
+						}).done().fail(function() {
+							swal("登录失效!", "请求服务器无响应，稍后再试", "warning");
+							setTimeout(function() {
+								window.location.href = "../../login.html";
+							}, 2000);
+						});
+					},
+
+					//删除终端关联
+					goDelBox: function(id) {
+						swal({
+							title: '',
+							text: "确定要删除吗?",
+							icon: "warning",
+							buttons: true,
+							dangerMode: true,
+						}).then((willDelete) => {
+							if (willDelete) {
+								this.loading = true;
+								$.ajax({
+									xhrFields: {
+										withCredentials: true
+									},
+									type: "POST",
+									url: httpurl + 'box_mapping/delete',
+									data: {
+										BOX_MAPPING_ID: id,
+										tm: new Date().getTime()
+									},
+									dataType: 'json',
+									success: function(data) {
+										if ("success" == data.result) {
+											swal("删除成功", "已经从列表中删除!", "success");
+
+										}
+										// vm.getList(vm.ROOM_ID);
+										vm.getBoxList(vm.ORGAN_ID);
+										// parent.vm.getData(); //刷新父页面
+									}
+								});
+							}
+						});
+					},
+
+					// 关联终端按钮
+					boxMapping: function(id) {
+						//获取当前诊室ID
+						console.log(id);
+
+						var diag = new top.Dialog();
+						diag.Drag = true;
+						diag.Title = "关联终端";
+						diag.URL = '../../dvrs/organ/box_mapping_edit.html?FID=' + id;
+						diag.Width = diagWidth;
+						diag.Height = diagHeight;
+						diag.CancelEvent = function() { //关闭事件
+							var varSon = diag.innerFrame.contentWindow.document.getElementById('showform');
+							if (varSon != null && varSon.style.display == 'none') {
+								vm.getBoxList(vm.ORGAN_ID);
+								// parent.vm.getData(); //刷新父页面
+							}
+							diag.close();
+						};
+						diag.show();
+
+
+					},
+
+
+					//获取列表
+					getList: function(F_ID, F_LEVEL) {
+						this.ORGAN_ID = F_ID;
+						this.loading = true;
+						console.log(F_LEVEL);
+
+						if (F_LEVEL == vm.ManageMax) {
+							window.location.href = "./manage_list.html?id=" + this.ORGAN_ID;
+							return;
+						}
+
+						$.ajax({
+							xhrFields: {
+								withCredentials: true
+							},
+							type: "POST",
+							url: httpurl + 'organ/list?showCount=' + this.showCount + '&currentPage=' + this
+								.currentPage,
+							data: {
+								ORGAN_ID: this.ORGAN_ID,
+								KEYWORDS: this.KEYWORDS,
+								tm: new Date().getTime()
+							},
+							dataType: "json",
+							success: function(data) {
+								if ("success" == data.result) {
+									vm.varList = data.varList;
+									vm.page = data.page;
+									vm.PARENT_ID = data.PARENT_ID;
+									vm.hasButton();
+									vm.loading = false;
+								} else if ("exception" == data.result) {
+									showException("科室管理", data.exception); //显示异常
+								}
+							}
+						}).done().fail(function() {
+							swal("登录失效!", "请求服务器无响应，稍后再试", "warning");
+							setTimeout(function() {
+								window.location.href = "../../login.html";
+							}, 2000);
+						});
+					},
+
+					//新增
+					goAdd: function(ORGAN_ID) {
+						var diag = new top.Dialog();
+						diag.Drag = true;
+						diag.Title = "新增";
+						diag.URL = '../../dvrs/organ/organ_edit.html?PARENT_ID=' + ORGAN_ID;
+						diag.Width = 600;
+						diag.Height = 600;
+						diag.CancelEvent = function() { //关闭事件
+							var varSon = diag.innerFrame.contentWindow.document.getElementById('showform');
+							console.log(varSon.style.display);
+							if (varSon != null && varSon.style.display == 'none') {
+								vm.getList(vm.ORGAN_ID);
+								parent.vm.getData(); //刷新父页面
+							}
+							diag.close();
+						};
+						diag.show();
+					},
+
+					//修改
+					goEdit: function(ORGAN_ID) {
+						var diag = new top.Dialog();
+						diag.Drag = true;
+						diag.Title = "编辑";
+						diag.URL = '../../dvrs/organ/organ_edit.html?PARENT_ID=' + this.ORGAN_ID + '&ORGAN_ID=' +
+							ORGAN_ID;
+						diag.Width = 600;
+						diag.Height = 600;
+						diag.CancelEvent = function() { //关闭事件
+							var varSon = diag.innerFrame.contentWindow.document.getElementById('showform');
+							if (varSon != null && varSon.style.display == 'none') {
+								vm.getList(vm.ORGAN_ID);
+								parent.vm.getData(); //刷新父页面
+							}
+							diag.close();
+						};
+						diag.show();
+					},
+
+					//查看
+					goView: function(ORGAN_ID) {
+						var diag = new top.Dialog();
+						diag.Drag = true;
+						diag.Title = "查看";
+						diag.URL = '../../dvrs/organ/organ_view.html?PARENT_ID=' + this.ORGAN_ID + '&ORGAN_ID=' +
+							ORGAN_ID;
+						diag.Width = 1000;
+						diag.Height = 800;
+						diag.CancelEvent = function() { //关闭事件
+							diag.close();
+						};
+						diag.show();
+					},
+
+					//删除
+					goDel: function(Id) {
+						swal({
+							title: '',
+							text: "确定要删除 吗?",
+							icon: "warning",
+							buttons: true,
+							dangerMode: true,
+						}).then((willDelete) => {
+							if (willDelete) {
+								this.loading = true;
+								$.ajax({
+									xhrFields: {
+										withCredentials: true
+									},
+									type: "POST",
+									url: httpurl + 'organ/delete',
+									data: {
+										ORGAN_ID: Id,
+										tm: new Date().getTime()
+									},
+									dataType: 'json',
+									success: function(data) {
+										if ("success" == data.result) {
+											swal("删除成功", "已经从列表中删除!", "success");
+											vm.getList(vm.ORGAN_ID);
+											parent.vm.getData(); //刷新父页面
+										} else if ("error" == data.result) {
+											swal("删除失败!", "删除失败！请先删除子级或删除占用资源!", "warning");
+											vm.loading = false;
+										}
+									}
+								});
+							}
+						});
+					},
+
+					//导出excel
+					goExcel: function() {
+						swal({
+							title: '',
+							text: '确定要导出到excel吗?',
+							icon: "warning",
+							buttons: true,
+							dangerMode: true,
+						}).then((willDelete) => {
+							if (willDelete) {
+								window.location.href = httpurl + 'organ/excel';
+							}
+						});
+					},
+
+					//根据url参数名称获取参数值
+					getUrlKey: function(name) {
+						return decodeURIComponent(
+							(new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.href) || [,
+								""
+							])[1].replace(/\+/g, '%20')) || null;
+					},
+
+					//判断按钮权限，用于是否显示按钮
+					hasButton: function() {
+						var keys = 'organ:add,organ:del,organ:edit,organ:cha,toExcel';
+						$.ajax({
+							xhrFields: {
+								withCredentials: true
+							},
+							type: "POST",
+							url: httpurl + 'head/hasButton',
+							data: {
+								keys: keys,
+								tm: new Date().getTime()
+							},
+							dataType: "json",
+							success: function(data) {
+								if ("success" == data.result) {
+									vm.add = data.organfhadminadd;
+									vm.del = data.organfhadmindel;
+									vm.edit = data.organfhadminedit;
+									vm.cha = data.organfhadmincha;
+									vm.toExcel = data.toExcel;
+								} else if ("exception" == data.result) {
+									showException("按钮权限", data.exception); //显示异常
+								}
+							}
+						})
+					},
+
+					//-----分页必用----start
+					nextPage: function(page) {
+						this.currentPage = page;
+						// this.getList(this.ORGAN_ID);
+						switch (this.Index) {
+							case 0:
+								this.getList(this.ORGAN_ID);
+								break;
+							case 1:
+								this.getBoxList(this.ORGAN_ID);
+								break;
+							default:
+								break;
+						}
+					},
+					changeCount: function(value) {
+						this.showCount = value;
+						// this.getList(this.ORGAN_ID);
+						switch (this.Index) {
+							case 0:
+								this.getList(this.ORGAN_ID);
+								break;
+							case 1:
+								this.getBoxList(this.ORGAN_ID);
+								break;
+							default:
+								break;
+						}
+					},
+
+
+					toTZ: function() {
+						var toPaggeVlue = document.getElementById("toGoPage").value;
+						if (toPaggeVlue == '') {
+							document.getElementById("toGoPage").value = 1;
+							return;
+						}
+						if (isNaN(Number(toPaggeVlue))) {
+							document.getElementById("toGoPage").value = 1;
+							return;
+						}
+						this.nextPage(toPaggeVlue);
+					}
+					//-----分页必用----end
+
+				},
+
+				mounted() {
+					this.init();
+				}
+
+			})
+		</script>
+
+	</body>
+</html>

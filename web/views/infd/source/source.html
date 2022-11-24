@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>FH Admin</title>
+		<!-- HTML5 Shim and Respond.js IE10 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 10]>
+		<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+		<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+		<![endif]-->
+		<!-- Meta -->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="author" content="FH Admin QQ313596790" />
+
+		<link rel="icon" href="../../../assets/images/favicon.ico" type="image/x-icon">
+		<link rel="stylesheet" href="../../../assets/fonts/fontawesome/css/fontawesome-all.min.css">
+		<link rel="stylesheet" href="../../../assets/plugins/animation/css/animate.min.css">
+		<link rel="stylesheet" href="../../../assets/css/style.css">
+
+		<!-- vue -->
+		<script src="../../../assets/js-vue/vue.js"></script>
+		<!--全局配置-->
+		<script src="../../../assets/js-v/config.js"></script>
+
+		<style type="text/css">
+			.costs-marl15 {
+				margin-left: 15px;
+			}
+
+			div.costs-uploadfile-div {
+				position: relative;
+				cursor: pointer;
+				margin-left: 2px;
+			}
+
+			div.costs-uploadfile-div #textfield {
+				width: 505px;
+				height: 30px;
+				cursor: pointer;
+			}
+
+			div.costs-uploadfile-div #FIMG {
+				width: 505px;
+				height: 30px;
+				position: absolute;
+				top: 0;
+				left: 0;
+				filter: alpha(opacity:0);
+				opacity: 0;
+				cursor: pointer;
+			}
+		</style>
+
+	</head>
+
+	<body style="background-color: white">
+
+		<!-- [加载状态 ] start -->
+		<div class="loader-bg">
+			<div class="loader-track">
+				<div class="loader-fill"></div>
+			</div>
+		</div>
+		<!-- [ 加载状态  ] End -->
+
+		<!-- [ 主内容区 ] start -->
+		<div class="pcoded-wrapper" id="app">
+			<div class="pcoded-content">
+				<div class="pcoded-inner-content">
+					<div class="main-body">
+						<div class="page-wrapper">
+							<!-- [ Main Content ] start -->
+							<div class="row">
+
+								<div style="width: 100%;">
+									<div id="showform" style="padding-top: 0px;">
+
+
+
+										<div class="input-group input-group-sm mb-3" style="margin-top: -5px;">
+											<div class="input-group-prepend">
+												<span class="input-group-text" style="width: 79px;"><span
+														style="width: 100%;">图片</span></span>
+											</div>
+											<div class="costs-uploadfile-div">
+												<input type="file" id="FIMG"    onchange="fileType(this)" />
+												<input type='text' id="textfield" class="btn btn-light btn--icon-text"
+													value="请选择选择图片" />
+											</div>
+										</div>
+										
+										<div id="" style="width: 600px;height: 600px;">
+											<img style="width: 100%;" src="" id="img" >
+											
+										</div>
+										<div class="input-group" style="margin-top:10px;background-color: white">
+											<span style="width: 100%;text-align: center;">
+												<a class="btn btn-light btn-sm" @click="save">保存</a>
+											</span>
+										</div>
+									</div>
+									<!-- [加载状态 ] start -->
+									<div id="jiazai" style="display:none;margin-top:50px;">
+										<div class="d-flex justify-content-center">
+											<div class="spinner-border" style="width: 3rem; height: 3rem;"
+												role="status">
+												<span class="sr-only">Loading...</span>
+											</div>
+										</div>
+									</div>
+									<!-- [ 加载状态  ] End -->
+								</div>
+
+							</div>
+							<!-- [ Main Content ] end -->
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- [ 主内容区 ] end -->
+
+		<script type="text/javascript" src="../../../assets/js/jquery-3.3.1.min.js"></script>
+		<script type="text/javascript" src="../../../assets/js/pre-loader.js"></script>
+		<script type="text/javascript" src="../../../assets/plugins/sweetalert/js/sweetalert.min.js"></script>
+		<!-- 表单验证提示 -->
+		<script type="text/javascript" src="../../../assets/js/jquery.tips.js"></script>
+
+		<!-- 本页面js -->
+		<!-- <script type="text/javascript" src="../../../assets/js-v/fhim/qgroup_edit.js"></script> -->
+		<script type="text/javascript">
+			var vm = new Vue({
+				el: '#app',
+
+				data: {},
+
+				methods: {
+
+					//初始执行
+					init() {
+						this.httpurl = httpurl;
+					},
+					test:function(obj){
+						console.log(obj);
+						console.log(111);
+						document.getElementById('textfield').value = obj.value;
+						var fileType = obj.value.substr(obj.value.lastIndexOf(".")).toLowerCase(); //获得文件后缀名
+						console.log(imgFile);
+					},
+
+					//去保存
+					save: function() {
+
+						var todata = new FormData();
+						var imgFile = document.getElementById("FIMG").files[0];
+						todata.append("FIMG", imgFile);
+						todata.append("NAME", imgFile.name);
+						console.log(imgFile);
+
+						//发送 post 请求提交保存
+						$.ajax({
+							xhrFields: {
+								withCredentials: true
+							},
+							url: httpurl + 'source/upload',
+							type: 'POST',
+							data: todata,
+							async: false,
+							cache: false,  
+							contentType: false,  
+							processData: false,
+							dataType: "json",
+							success: function(data) {
+								if ("success" == data.result) {
+									$("#img").attr("src",httpurl+data.pd.path);
+								} else if ("exception" == data.result) {
+									showException("编辑群", data.exception); //显示异常
+									$("#showform").show();
+									$("#jiazai").hide();
+								}
+							}
+						}).done().fail(function() {
+							swal("登录失效!", "请求服务器无响应，稍后再试", "warning");
+							$("#showform").show();
+							$("#jiazai").hide();
+						});
+
+
+					},
+
+
+					//根据url参数名称获取参数值
+					getUrlKey: function(name) {
+						return decodeURIComponent(
+							(new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.href) || [,
+								""
+							])[1].replace(/\+/g, '%20')) || null;
+					}
+
+				},
+
+				mounted() {
+					this.init();
+				}
+			})
+
+			//过滤类型
+			function fileType(obj) {
+				document.getElementById('textfield').value = obj.value;
+				var fileType = obj.value.substr(obj.value.lastIndexOf(".")).toLowerCase(); //获得文件后缀名
+				if (fileType != '.gif' && fileType != '.png' && fileType != '.jpg' && fileType != '.jpeg' && fileType != '.mp4') {
+					$("#FIMG").tips({
+						side: 3,
+						msg: '请上传图片格式的文件',
+						bg: '#AE81FF',
+						time: 3
+					});
+					$("#FIMG").val('');
+					$("#textfield").val('请选择选择图片');
+					document.getElementById("FIMG").files[0] = '请选择图片';
+				}
+				
+				
+			}
+		</script>
+
+	</body>
+</html>

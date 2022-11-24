@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+
+		我是iframe
+
+		<!-- <button type="button" onclick="testClick()">iframe</button> -->
+	</body>
+	<script src="https://cdn.socket.io/4.4.0/socket.io.min.js"
+		integrity="sha384-1fOn6VtTq3PWwfsOrk45LnYcGosJwzMHv+Xh/Jx5303FVOXzEnw0EpLv30mtjmlj" crossorigin="anonymous">
+	</script>
+	<script type="text/javascript">
+	var socket = io('http://localhost:9999?par1=1234');
+	socket.on("advert_info", (socket) => {
+	  console.log(socket); // x8WIv7-mJelg7on_ALbx
+	});
+	
+	socket.on("connected", (socket) => {
+	  console.log(socket); // x8WIv7-mJelg7on_ALbx
+	});
+	
+	
+	socket.on("borcast", (socket) => {
+	  console.log(socket); // x8WIv7-mJelg7on_ALbx
+	});
+	
+
+
+
+
+	</script>
+</html>

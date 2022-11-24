@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>FH Admin</title>
+		<!-- HTML5 Shim and Respond.js IE10 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 10]>
+		<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+		<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+		<![endif]-->
+		<!-- Meta -->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="author" content="FH Admin QQ313596790" />
+
+		<link rel="icon" href="../../../assets/images/favicon.ico" type="image/x-icon">
+		<link rel="stylesheet" href="../../../assets/fonts/fontawesome/css/fontawesome-all.min.css">
+		<link rel="stylesheet" href="../../../assets/plugins/animation/css/animate.min.css">
+		<link rel="stylesheet" href="../../../assets/css/style.css">
+
+		<!-- 日期插件 -->
+		<link rel="stylesheet"
+			href="../../../assets/plugins/material-datetimepicker/css/bootstrap-material-datetimepicker.css">
+
+		<!-- select插件 -->
+		<link rel="stylesheet" href="../../../assets/plugins/select2/css/select2.min.css">
+		<link rel="stylesheet" href="../../../assets/plugins/multi-select/css/multi-select.css">
+
+		<!-- vue -->
+		<script src="../../../assets/js-vue/vue.js"></script>
+		<!--全局配置-->
+		<script src="../../../assets/js-v/config.js"></script>
+
+	</head>
+
+	<body style="background-color: white">
+
+		<!-- [加载状态 ] start -->
+		<div class="loader-bg">
+			<div class="loader-track">
+				<div class="loader-fill"></div>
+			</div>
+		</div>
+		<!-- [ 加载状态  ] End -->
+
+		<!-- [ 主内容区 ] start -->
+		<div class="pcoded-wrapper" id="app">
+			<div class="pcoded-content">
+				<div class="pcoded-inner-content">
+					<div class="main-body">
+						<div class="page-wrapper">
+							<!-- [ Main Content ] start -->
+							<div class="row">
+
+								<div style="width: 100%;">
+									<div id="showform">
+										<div class="input-group input-group-sm mb-3" style="margin-top: -10px;">
+											<div class="input-group-prepend">
+												<span class="input-group-text" style="width: 79px;"><span
+														style="width: 100%;">机构ID</span></span>
+											</div>
+											<input type="text" class="form-control" ref="ORGAN_ID" id="ORGAN_ID"
+												v-model="pd.ORGAN_ID" maxlength="50" placeholder="这里输入机构ID"
+												title="机构ID">
+										</div>
+										<div class="input-group input-group-sm mb-3" style="margin-top: -10px;">
+											<div class="input-group-prepend">
+												<span class="input-group-text" style="width: 79px;"><span
+														style="width: 100%;">模板名称</span></span>
+											</div>
+											<input type="text" class="form-control" ref="STENCIL_NAME" id="STENCIL_NAME"
+												v-model="pd.STENCIL_NAME" maxlength="50" placeholder="这里输入模板名称"
+												title="模板名称">
+										</div>
+										<div class="input-group input-group-sm mb-3" style="margin-top: -10px;">
+											<div class="input-group-prepend">
+												<span class="input-group-text" style="width: 79px;"><span
+														style="width: 100%;">宽度</span></span>
+											</div>
+											<input type="text" class="form-control" ref="STENCIL_WIDTH"
+												id="STENCIL_WIDTH" v-model="pd.STENCIL_WIDTH" maxlength="50"
+												placeholder="这里输入宽度" title="宽度">
+										</div>
+										<div class="input-group input-group-sm mb-3" style="margin-top: -10px;">
+											<div class="input-group-prepend">
+												<span class="input-group-text" style="width: 79px;"><span
+														style="width: 100%;">高度</span></span>
+											</div>
+											<input type="text" class="form-control" ref="STENCIL_HEIGHT"
+												id="STENCIL_HEIGHT" v-model="pd.STENCIL_HEIGHT" maxlength="50"
+												placeholder="这里输入高度" title="高度">
+										</div>
+										<div class="input-group input-group-sm mb-3" style="margin-top: -10px;">
+											<div class="input-group-prepend">
+												<span class="input-group-text" style="width: 79px;"><span
+														style="width: 100%;">背景图</span></span>
+											</div>
+											<!-- <input type="text" class="form-control" ref="STENCIL_BACKGROUND"
+												id="STENCIL_BACKGROUND" v-model="pd.STENCIL_BACKGROUND" maxlength="200"
+												placeholder="这里输入背景图" title="背景图"> -->
+
+											<select class="form-control js-example-placeholder-multiple col-sm-12"
+												ref="STENCIL_BACKGROUND" id="STENCIL_BACKGROUND"
+												data-placeholder="请选择背景图">
+												<option value=""></option>
+												<template v-for="data in backImgList">
+													{{data}}
+													<template v-if="data.SOURCE_PATH == pd.STENCIL_BACKGROUND">
+														<option v-bind:value="data.SOURCE_PATH" selected>
+															{{data.SOURCE_NAME}}
+														</option>
+													</template>
+													<template v-else>
+														<option v-bind:value="data.SOURCE_PATH">{{data.SOURCE_NAME}}
+														</option>
+													</template>
+												</template>
+											</select>
+
+										</div>
+
+										<div class="input-group input-group-sm mb-3" style="margin-top: -10px;">
+											<div class="input-group-prepend">
+												<span class="input-group-text" style="width: 79px;"><span
+														style="width: 100%;">显示标尺</span></span>
+											</div>
+											<select class="form-control js-example-placeholder-multiple col-sm-12"
+												ref="STENCIL_IS_SCALEPLATE" id="STENCIL_IS_SCALEPLATE"
+												data-placeholder="请选择是否显示标尺">
+												<option value="0" :selected="0==pd.STENCIL_IS_SCALEPLATE">显示</option>
+												<option value="1" :selected="1==pd.STENCIL_IS_SCALEPLATE">不显示</option>
+											</select>
+										</div>
+
+										<div class="input-group input-group-sm mb-3" style="margin-top: -10px;">
+											<div class="input-group-prepend">
+												<span class="input-group-text" style="width: 79px;"><span
+														style="width: 100%;">缩放</span></span>
+											</div>
+
+											<select class="form-control js-example-placeholder-multiple col-sm-12"
+												ref="STENCIL_IS_ZOOM" id="STENCIL_IS_ZOOM" data-placeholder="请选择是否显示标尺">
+
+												<option value="1" :selected="1==pd.STENCIL_IS_ZOOM">不缩放</option>
+												<option value="0" :selected="0==pd.STENCIL_IS_ZOOM">缩放</option>
+
+											</select>
+
+
+										</div>
+
+
+
+										<div class="input-group input-group-sm mb-3" style="margin-top: -10px;">
+											<div class="input-group-prepend">
+												<span class="input-group-text" style="width: 79px;"><span
+														style="width: 100%;">缩放比例</span></span>
+											</div>
+
+											<select class="form-control js-example-placeholder-multiple col-sm-12"
+												ref="STENCIL_SCALE" id="STENCIL_SCALE" data-placeholder="请选择缩放比例">
+												<template v-for="list in STENCIL_SCALE_LIST">
+													<template v-if="list.value == pd.STENCIL_SCALE">
+														<option v-bind:value="list.value" selected>
+															{{list.name}}
+														</option>
+													</template>
+													<template v-else>
+														<option v-bind:value="list.value">{{list.name}}
+														</option>
+													</template>
+												</template>
+
+											</select>
+
+
+										</div>
+
+
+
+										<div class="input-group input-group-sm mb-3" style="margin-top: -10px;">
+											<div class="input-group-prepend">
+												<span class="input-group-text" style="width: 79px;"><span
+														style="width: 100%;">清屏时间</span></span>
+											</div>
+											<input type="text" class="form-control" ref="STENCIL_CLEAN"
+												id="STENCIL_CLEAN" v-model="pd.STENCIL_CLEAN" maxlength="10"
+												placeholder="这里输入清除屏幕内容时间" title="清除屏幕内容时间">
+										</div>
+										<div class="input-group input-group-sm mb-3" style="margin-top: -10px;">
+											<div class="input-group-prepend">
+												<span class="input-group-text" style="width: 79px;"><span
+														style="width: 100%;">备注</span></span>
+											</div>
+											<input type="text" class="form-control" ref="STENCIL_REMARK"
+												id="STENCIL_REMARK" v-model="pd.STENCIL_REMARK" maxlength="200"
+												placeholder="这里输入备注" title="备注">
+										</div>
+										<div class="input-group" style="margin-top:10px;background-color: white">
+											<span style="width: 100%;text-align: center;">
+												<a class="btn btn-light btn-sm" v-on:click="save">保存</a>
+												<a class="btn btn-light btn-sm" onclick="top.Dialog.close()">取消</a>
+											</span>
+										</div>
+									</div>
+									<!-- [加载状态 ] start -->
+									<div id="jiazai" style="display:none;margin-top:50px;">
+										<div class="d-flex justify-content-center">
+											<div class="spinner-border" style="width: 3rem; height: 3rem;"
+												role="status">
+												<span class="sr-only">Loading...</span>
+											</div>
+										</div>
+									</div>
+									<!-- [ 加载状态  ] End -->
+								</div>
+
+							</div>
+							<!-- [ Main Content ] end -->
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- [ 主内容区 ] end -->
+
+		<script type="text/javascript" src="../../../assets/js/jquery-1.7.2.js"></script>
+		<script type="text/javascript" src="../../../assets/js/pre-loader.js"></script>
+		<script src="../../../assets/plugins/sweetalert/js/sweetalert.min.js"></script>
+
+		<!-- 日期插件 -->
+		<script src="../../../assets/js/pages/moment-with-locales.min.js"></script>
+		<script src="../../../assets/plugins/material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
+		<script src="../../../assets/js/pages/form-picker-custom.js"></script>
+
+		<!-- select插件 -->
+		<script src="../../../assets/plugins/select2/js/select2.full.min.js"></script>
+		<script src="../../../assets/plugins/multi-select/js/jquery.quicksearch.js"></script>
+		<script src="../../../assets/plugins/multi-select/js/jquery.multi-select.js"></script>
+		<script src="../../../assets/js/pages/form-select-custom.js"></script>
+
+		<!-- 表单验证提示 -->
+		<script src="../../../assets/js/jquery.tips.js"></script>
+
+		<script type="text/javascript">
+			var vm = new Vue({
+				el: '#app',
+
+				data: {
+					STENCIL_ID: '', //主键ID
+					pd: [], //存放字段参数
+					msg: 'add',
+					backImgList: [],
+					STENCIL_SCALE_LIST: [{
+						value: '0.9',
+						name: '10%'
+					}, {
+						value: '0.8',
+						name: '20%'
+					}, {
+						value: '0.7',
+						name: '30%'
+					}, {
+						value: '0.6',
+						name: '40%'
+					}, {
+						value: '0.5',
+						name: '50%'
+					}],
+					// STENCIL_IS_ZOOM_LIST:[{value:0,name:'缩放'}]
+
+				},
+
+				methods: {
+
+					//初始执行
+					init() {
+						var FID = this.getUrlKey('FID'); //当接收过来的FID不为null时,表示此页面是修改进来的
+						this.getBackImg();
+						if (null != FID) {
+							this.msg = 'edit';
+							this.STENCIL_ID = FID;
+
+							this.getData();
+						}
+						setTimeout(function() {
+							vm.getDict();
+						}, 200);
+					},
+
+					getBackImg: function() {
+						$.ajax({
+							xhrFields: {
+								withCredentials: true
+							},
+							type: "POST",
+							url: httpurl + 'source/listAll',
+							data: {
+								tm: new Date().getTime()
+							},
+							dataType: "json",
+							success: function(data) {
+								if ("success" == data.result) {
+									// vm.pd = data.pd; //参数map
+									vm.backImgList = data.varOList;
+									console.log(vm.backImgList);
+								} else if ("exception" == data.result) {
+									showException("资源列表", data.exception); //显示异常
+									$("#showform").show();
+									$("#jiazai").hide();
+								}
+							}
+						}).done().fail(function() {
+							swal("登录失效!", "请求服务器无响应，稍后再试", "warning");
+							$("#showform").show();
+							$("#jiazai").hide();
+						});
+
+					},
+
+					//去保存
+					save: function() {
+
+						this.pd.STENCIL_BACKGROUND = $("#STENCIL_BACKGROUND").val();
+						this.pd.STENCIL_IS_SCALEPLATE = $("#STENCIL_IS_SCALEPLATE").val();
+						this.pd.STENCIL_IS_ZOOM = $("#STENCIL_IS_ZOOM").val();
+						this.pd.STENCIL_SCALE = $("#STENCIL_SCALE").val();
+
+
+						if (this.pd.ORGAN_ID == '' || this.pd.ORGAN_ID == undefined) {
+							$("#ORGAN_ID").tips({
+								side: 3,
+								msg: '请输入机构ID',
+								bg: '#AE81FF',
+								time: 2
+							});
+							this.pd.ORGAN_ID = '';
+							this.$refs.ORGAN_ID.focus();
+							return false;
+						}
+						if (this.pd.STENCIL_NAME == '' || this.pd.STENCIL_NAME == undefined) {
+							$("#STENCIL_NAME").tips({
+								side: 3,
+								msg: '请输入模板名称',
+								bg: '#AE81FF',
+								time: 2
+							});
+							this.pd.STENCIL_NAME = '';
+							this.$refs.STENCIL_NAME.focus();
+							return false;
+						}
+						if (this.pd.STENCIL_WIDTH == '' || this.pd.STENCIL_WIDTH == undefined) {
+							$("#STENCIL_WIDTH").tips({
+								side: 3,
+								msg: '请输入宽度',
+								bg: '#AE81FF',
+								time: 2
+							});
+							this.pd.STENCIL_WIDTH = '';
+							this.$refs.STENCIL_WIDTH.focus();
+							return false;
+						}
+						if (this.pd.STENCIL_HEIGHT == '' || this.pd.STENCIL_HEIGHT == undefined) {
+							$("#STENCIL_HEIGHT").tips({
+								side: 3,
+								msg: '请输入高度',
+								bg: '#AE81FF',
+								time: 2
+							});
+							this.pd.STENCIL_HEIGHT = '';
+							this.$refs.STENCIL_HEIGHT.focus();
+							return false;
+						}
+						if (this.pd.STENCIL_BACKGROUND == '' || this.pd.STENCIL_BACKGROUND == undefined) {
+							$("#STENCIL_BACKGROUND").tips({
+								side: 3,
+								msg: '请输入背景图',
+								bg: '#AE81FF',
+								time: 2
+							});
+							this.pd.STENCIL_BACKGROUND = '';
+							this.$refs.STENCIL_BACKGROUND.focus();
+							return false;
+						}
+						if (this.pd.STENCIL_IS_SCALEPLATE == '' || this.pd.STENCIL_IS_SCALEPLATE == undefined) {
+							$("#STENCIL_IS_SCALEPLATE").tips({
+								side: 3,
+								msg: '请输入是否显示标尺：0 显示   1不显示',
+								bg: '#AE81FF',
+								time: 2
+							});
+							this.pd.STENCIL_IS_SCALEPLATE = '';
+							this.$refs.STENCIL_IS_SCALEPLATE.focus();
+							return false;
+						}
+						if (this.pd.STENCIL_IS_ZOOM == '' || this.pd.STENCIL_IS_ZOOM == undefined) {
+							$("#STENCIL_IS_ZOOM").tips({
+								side: 3,
+								msg: '请输入是否缩放： 0缩放    1不缩放',
+								bg: '#AE81FF',
+								time: 2
+							});
+							this.pd.STENCIL_IS_ZOOM = '';
+							this.$refs.STENCIL_IS_ZOOM.focus();
+							return false;
+						}
+						if (this.pd.STENCIL_SCALE == '' || this.pd.STENCIL_SCALE == undefined) {
+							$("#STENCIL_SCALE").tips({
+								side: 3,
+								msg: '请输入缩放比例',
+								bg: '#AE81FF',
+								time: 2
+							});
+							this.pd.STENCIL_SCALE = '';
+							this.$refs.STENCIL_SCALE.focus();
+							return false;
+						}
+						if (this.pd.STENCIL_CLEAN == '' || this.pd.STENCIL_CLEAN == undefined) {
+							$("#STENCIL_CLEAN").tips({
+								side: 3,
+								msg: '请输入清除屏幕内容时间',
+								bg: '#AE81FF',
+								time: 2
+							});
+							this.pd.STENCIL_CLEAN = '';
+							this.$refs.STENCIL_CLEAN.focus();
+							return false;
+						}
+						if (this.pd.STENCIL_REMARK == '' || this.pd.STENCIL_REMARK == undefined) {
+							$("#STENCIL_REMARK").tips({
+								side: 3,
+								msg: '请输入备注',
+								bg: '#AE81FF',
+								time: 2
+							});
+							this.pd.STENCIL_REMARK = '';
+							this.$refs.STENCIL_REMARK.focus();
+							return false;
+						}
+
+						$("#showform").hide();
+						$("#jiazai").show();
+
+						//发送 post 请求提交保存
+						$.ajax({
+							xhrFields: {
+								withCredentials: true
+							},
+							type: "POST",
+							url: httpurl + 'stencil/' + this.msg,
+							data: {
+								STENCIL_ID: this.STENCIL_ID,
+								ORGAN_ID: this.pd.ORGAN_ID,
+								STENCIL_NAME: this.pd.STENCIL_NAME,
+								STENCIL_WIDTH: this.pd.STENCIL_WIDTH,
+								STENCIL_HEIGHT: this.pd.STENCIL_HEIGHT,
+								STENCIL_BACKGROUND: this.pd.STENCIL_BACKGROUND,
+								STENCIL_IS_SCALEPLATE: this.pd.STENCIL_IS_SCALEPLATE,
+								STENCIL_IS_ZOOM: this.pd.STENCIL_IS_ZOOM,
+								STENCIL_SCALE: this.pd.STENCIL_SCALE,
+								STENCIL_CLEAN: this.pd.STENCIL_CLEAN,
+								STENCIL_REMARK: this.pd.STENCIL_REMARK,
+								tm: new Date().getTime()
+							},
+							dataType: "json",
+							success: function(data) {
+								if ("success" == data.result) {
+									swal("", "保存成功", "success");
+									setTimeout(function() {
+										top.Dialog.close(); //关闭弹窗
+									}, 1000);
+								} else if ("exception" == data.result) {
+									showException("模板列表", data.exception); //显示异常
+									$("#showform").show();
+									$("#jiazai").hide();
+								}
+							}
+						}).done().fail(function() {
+							swal("登录失效!", "请求服务器无响应，稍后再试", "warning");
+							$("#showform").show();
+							$("#jiazai").hide();
+						});
+					},
+
+					//根据主键ID获取数据
+					getData: function() {
+						//发送 post 请求
+						$.ajax({
+							xhrFields: {
+								withCredentials: true
+							},
+							type: "POST",
+							url: httpurl + 'stencil/goEdit',
+							data: {
+								STENCIL_ID: this.STENCIL_ID,
+								tm: new Date().getTime()
+							},
+							dataType: "json",
+							success: function(data) {
+								if ("success" == data.result) {
+									vm.pd = data.pd; //参数map
+									// vm.STENCIL_IS_SCALEPLATE = data.pd.STENCIL_IS_SCALEPLATE;
+								} else if ("exception" == data.result) {
+									showException("模板列表", data.exception); //显示异常
+									$("#showform").show();
+									$("#jiazai").hide();
+								}
+							}
+						}).done().fail(function() {
+							swal("登录失效!", "请求服务器无响应，稍后再试", "warning");
+							$("#showform").show();
+							$("#jiazai").hide();
+						});
+					},
+
+					//获取数据字典数据
+					getDict: function() {},
+
+					//根据url参数名称获取参数值
+					getUrlKey: function(name) {
+						return decodeURIComponent(
+							(new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.href) || [,
+								""
+							])[1].replace(/\+/g, '%20')) || null;
+					}
+
+				},
+
+				mounted() {
+					this.init();
+				}
+			})
+		</script>
+
+	</body>
+</html>

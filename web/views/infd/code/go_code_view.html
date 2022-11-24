@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>FH Admin</title>
+		<!-- HTML5 Shim and Respond.js IE10 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 10]>
+		<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+		<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+		<![endif]-->
+		<!-- Meta -->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="author" content="FH Admin QQ313596790" />
+
+		<link rel="icon" href="../../../assets/images/favicon.ico" type="image/x-icon">
+		<link rel="stylesheet" href="../../../assets/fonts/fontawesome/css/fontawesome-all.min.css">
+		<link rel="stylesheet" href="../../../assets/plugins/animation/css/animate.min.css">
+		<link rel="stylesheet" href="../../../assets/css/style.css">
+
+		<!-- 日期插件 -->
+		<link rel="stylesheet"
+			href="../../../assets/plugins/material-datetimepicker/css/bootstrap-material-datetimepicker.css">
+
+		<!-- select插件 -->
+		<link rel="stylesheet" href="../../../assets/plugins/select2/css/select2.min.css">
+		<link rel="stylesheet" href="../../../assets/plugins/multi-select/css/multi-select.css">
+
+		<!-- vue -->
+		<script src="../../../assets/js-vue/vue.js"></script>
+		<!--全局配置-->
+		<script src="../../../assets/js-v/config.js"></script>
+
+		<script src="https://cdn.bootcdn.net/ajax/libs/ace/test/ace.js"></script>
+		<script src="https://cdn.bootcdn.net/ajax/libs/ace/test/theme-monokai.js"></script>
+		<script src="https://cdn.bootcdn.net/ajax/libs/ace/test/mode-javascript.js"></script>
+		<script src="https://cdn.bootcdn.net/ajax/libs/ace/test/mode-html.js"></script>
+		<script src="https://cdn.bootcdn.net/ajax/libs/ace/test/ext-language_tools.js"></script>
+
+		<style type="text/css">
+			#test {
+				width: 47%;
+				height: 100%;
+				border: 1px solid #d6d6d6;
+				box-sizing: border-box;
+			}
+
+			#myiframe {
+				width: 100%;
+				height: 100%;
+
+			}
+
+			#content {
+				width: 100%;
+				height: 97vh;
+				display: flex;
+				justify-content: space-between;
+				1
+			}
+
+			#editorHtml {
+				width: 45%;
+				height: 100%;
+			}
+
+
+
+			#center {
+				width: 8%;
+				height: 100%;
+				background: #e8e8e8;
+			}
+
+			.btn {
+				padding: 0.375rem 0.75rem;
+				margin-left: 10px;
+			}
+
+			.s1 {
+				width: unset;
+			}
+
+			.status {
+				padding: 5px;
+			}
+		</style>
+	</head>
+
+	<body style="background-color: white">
+
+		<!-- [加载状态 ] start -->
+		<div class="loader-bg">
+			<div class="loader-track">
+				<div class="loader-fill"></div>
+			</div>
+		</div>
+		<!-- [ 加载状态  ] End -->
+
+		<!-- [ 主内容区 ] start -->
+		<div class="pcoded-wrapper" id="app">
+			<div class="pcoded-content">
+				<div class="pcoded-inner-content">
+					<div class="main-body">
+						<div class="page-wrapper">
+							<!-- [ Main Content ] start -->
+							<div class="row">
+
+								<div style="width: 100%;">
+									<div id="showform">
+										<!-- 代码模板 -->
+										<div id="content">
+
+											<div id="editorHtml"></div>
+
+											<div id="center">
+
+												<p class="status">当前状态：<br /><span class="status-name">加载中···</span></p>
+
+												<button type="button" class="btn btn-primary"
+													@click="setCode()">渲染</button>
+												<br />
+												<button type="button" class="btn btn-primary"
+													@click="saveCode()">保存</button>
+												<br />
+												<button type="button" class="btn btn-primary"
+													@click="fileList()">资源文件管理</button>
+												<button type="button" class="btn btn-primary"
+													@click="interfaceList()">接口列表</button>
+											</div>
+
+
+											<div id="test">
+												<iframe id="myiframe" frameborder="no" border="no" marginwidth="0"
+													marginheight="0" allowtransparency="yes">
+
+												</iframe>
+											</div>
+										</div>
+
+									</div>
+									<!-- [加载状态 ] start -->
+									<div id="jiazai" style="display:none;margin-top:50px;">
+										<div class="d-flex justify-content-center">
+											<div class="spinner-border" style="width: 3rem; height: 3rem;"
+												role="status">
+												<span class="sr-only">Loading...</span>
+											</div>
+										</div>
+									</div>
+									<!-- [ 加载状态  ] End -->
+								</div>
+
+							</div>
+							<!-- [ Main Content ] end -->
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- [ 主内容区 ] end -->
+
+		<!-- <input type="hidden" name="zIndex" id="zIndex" value="" /> -->
+
+
+
+		<script type="text/javascript" src="../../../assets/js/jquery-1.7.2.js"></script>
+		<script type="text/javascript" src="../../../assets/js/pre-loader.js"></script>
+		<script src="../../../assets/plugins/sweetalert/js/sweetalert.min.js"></script>
+
+
+		<!-- 日期插件 -->
+		<script src="../../../assets/js/pages/moment-with-locales.min.js"></script>
+		<script src="../../../assets/plugins/material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
+		<script src="../../../assets/js/pages/form-picker-custom.js"></script>
+
+		<!-- select插件 -->
+		<script src="../../../assets/plugins/select2/js/select2.full.min.js"></script>
+		<script src="../../../assets/plugins/multi-select/js/jquery.quicksearch.js"></script>
+		<script src="../../../assets/plugins/multi-select/js/jquery.multi-select.js"></script>
+		<script src="../../../assets/js/pages/form-select-custom.js"></script>
+
+		<!-- 表单验证提示 -->
+		<script src="../../../assets/js/jquery.tips.js"></script>
+
+		<script type="text/javascript">
+			var vm = new Vue({
+				el: '#app',
+
+				data: {
+					CODE_ID: '', //主键ID
+					pd: {}, //存放字段参数
+					editorHtml: ''
+				},
+
+				methods: {
+					//初始执行
+					init() {
+						var FID = this.getUrlKey('FID'); //接收过来的FID
+						if (null != FID) {
+							this.CODE_ID = FID;
+							this.setEdit();
+							this.getData();
+						}
+					},
+
+					//根据主键ID获取数据
+					getData: function() {
+						//发送 post 请求
+						$.ajax({
+							xhrFields: {
+								withCredentials: true
+							},
+							type: "POST",
+							url: httpurl + 'code/goView',
+							data: {
+								CODE_ID: this.CODE_ID,
+								tm: new Date().getTime()
+							},
+							dataType: "json",
+							success: function(data) {
+								if ("success" == data.result) {
+									vm.pd = data.pd; //参数map
+									vm.getCode();
+								} else if ("exception" == data.result) {
+									showException("代码模板列表", data.exception); //显示异常
+									$("#showform").show();
+									$("#jiazai").hide();
+								}
+							}
+						}).done().fail(function() {
+							swal("登录失效!", "请求服务器无响应，稍后再试", "warning");
+							$("#showform").show();
+							$("#jiazai").hide();
+						});
+					},
+
+
+					//保存代码HTML
+					saveCode: function() {
+						$.ajax({
+							xhrFields: {
+								withCredentials: true
+							},
+							type: "POST",
+							url: httpurl + 'code/editCode',
+							data: {
+								CODE_ID: this.CODE_ID,
+								CODE_HTML: this.editorHtml.getValue(),
+							},
+							dataType: "json",
+							success: function(data) {
+								if ("success" == data.result) {
+									$(".status-name").text("已自动保存");
+								} else if ("exception" == data.result) {
+									$(".status-name").text("保存失败！");
+									showException("代码模板列表", data.exception); //显示异常
+									$("#showform").show();
+									$("#jiazai").hide();
+								}
+							}
+						}).done().fail(function() {
+							swal("登录失效!", "请求服务器无响应，稍后再试", "warning");
+							$("#showform").show();
+							$("#jiazai").hide();
+						});
+					},
+
+
+					//查看资源文件列表
+					fileList() {
+						let zIndex = parent.$("#_DialogBGDiv").css("z-index");
+						var diag = new top.Dialog();
+						diag.Drag = true;
+						diag.Title = "资源文件列表";
+						diag.URL = '../../infd/code/code_source_list.html?CODE_ID='+this.CODE_ID;
+						diag.Width = 1500;
+						diag.Height = 880;
+						diag.Modal = true; //有无遮罩窗口
+						diag.ShowMaxButton = true; //最大化按钮
+						diag.ShowMinButton = true; //最小化按钮 
+						diag.CancelEvent = function() { //关闭事件
+							diag.close();
+							parent.$("#_DialogBGDiv").css("display", "");
+							parent.$("#_DialogBGDiv").css("z-index", zIndex);
+						};
+						diag.show();
+					},
+
+
+					// 接口列表
+					interfaceList: function() {
+						let zIndex = parent.$("#_DialogBGDiv").css("z-index");
+						var diag = new top.Dialog();
+						diag.Drag = true;
+						diag.Title = "接口列表";
+						diag.URL = '../../infd/code/code_interface_list.html?CODE_ID='+this.CODE_ID;
+						diag.Width = 1200;
+						diag.Height = 800;
+						diag.Modal = true; //有无遮罩窗口
+						diag.ShowMaxButton = true; //最大化按钮
+						diag.ShowMinButton = true; //最小化按钮 
+						diag.CancelEvent = function() { //关闭事件
+							diag.close();
+							parent.$("#_DialogBGDiv").css("display", "");
+							parent.$("#_DialogBGDiv").css("z-index", zIndex);
+						};
+						diag.show();
+					},
+
+
+					//获取代码模板内容HTML
+					getCode: function() {
+						if (this.pd.CODE_HTML == "" || this.pd.CODE_HTML == undefined) {
+							$.ajax({
+								xhrFields: {
+									withCredentials: true
+								},
+								type: "POST",
+								url: httpurl + 'code/codeTemplate',
+								data: {},
+								dataType: "json",
+								success: function(data) {
+									if ("success" == data.result) {
+										// 获取代码模板进行加载
+										// vm.editorHtml.setValue(data.CODE_HTML);
+										vm.setEditValue(data.CODE_HTML);
+									} else if ("exception" == data.result) {
+										showException("代码模板列表", data.exception); //显示异常
+										$("#showform").show();
+										$("#jiazai").hide();
+									}
+								}
+							}).done().fail(function() {
+								swal("登录失效!", "请求服务器无响应，稍后再试", "warning");
+								$("#showform").show();
+								$("#jiazai").hide();
+							});
+
+						} else {
+							// 获取代码模板进行加载
+							// vm.editorHtml.setValue(vm.pd.CODE_HTML);
+							vm.setEditValue(vm.pd.CODE_HTML);
+						}
+					},
+
+					setEditValue: function(code) {
+						vm.editorHtml.setValue(code);
+					},
+
+					// 初始化编辑器
+					setEdit: function() {
+						$("#editorHtml").css("font-size", "16px");
+						ace.require("ace/ext/language_tools");
+						this.editorHtml = ace.edit("editorHtml");
+						this.editorHtml.getSession().setUseWrapMode(true);
+						this.editorHtml.setHighlightActiveLine(false);
+						this.editorHtml.setTheme("ace/theme/monokai");
+						this.editorHtml.resize()
+						this.editorHtml.session.setMode("ace/mode/html");
+						this.editorHtml.setOptions({
+							enableBasicAutocompletion: true,
+							enableSnippets: true,
+							enableLiveAutocompletion: true
+						});
+
+						// 监听编辑器输入
+						this.editorHtml.getSession().on('change', this.changeCode);
+					},
+
+					// 监听编辑事件
+					changeCode: function() {
+						// 防止频繁渲染数据
+						if (this.a != null) {
+							$(".status-name").text("编辑中···");
+							window.clearTimeout(this.a);
+						}
+						this.a = setTimeout(() => {
+							vm.setCode();
+							vm.saveCode();
+
+						}, 1500);
+					},
+
+					// 渲染页面   ${httpurl}/  替换
+					setCode: function() {
+						let iframe = document.getElementById('myiframe');
+						var e2 = this.editorHtml.getValue().replace(/\${httpurl}/g, httpurl);
+						iframe.contentWindow.document.open();
+						iframe.contentWindow.document.write(e2)
+						iframe.contentWindow.document.close();
+						
+						
+					},
+
+					//获取数据字典数据
+					getDict: function() {},
+
+					//根据url参数名称获取参数值
+					getUrlKey: function(name) {
+						return decodeURIComponent(
+							(new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.href) || [,
+								""
+							])[1].replace(/\+/g, '%20')) || null;
+					}
+
+				},
+
+				mounted() {
+					this.init();
+				}
+			})
+		</script>
+
+	</body>
+</html>

@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>FH Admin</title>
+		<!-- HTML5 Shim and Respond.js IE10 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 10]>
+		<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+		<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+		<![endif]-->
+		<!-- Meta -->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="author" content="FH Admin QQ313596790" />
+
+		<link rel="icon" href="../../../assets/images/favicon.ico" type="image/x-icon">
+		<link rel="stylesheet" href="../../../assets/fonts/fontawesome/css/fontawesome-all.min.css">
+		<link rel="stylesheet" href="../../../assets/plugins/animation/css/animate.min.css">
+		<link rel="stylesheet" href="../../../assets/css/style.css">
+
+		<!-- 日期插件 -->
+		<link rel="stylesheet"
+			href="../../../assets/plugins/material-datetimepicker/css/bootstrap-material-datetimepicker.css">
+
+		<!-- select插件 -->
+		<link rel="stylesheet" href="../../../assets/plugins/select2/css/select2.min.css">
+		<link rel="stylesheet" href="../../../assets/plugins/multi-select/css/multi-select.css">
+
+		<!-- vue -->
+		<script src="../../../assets/js-vue/vue.js"></script>
+		<!--全局配置-->
+		<script src="../../../assets/js-v/config.js"></script>
+
+	</head>
+
+	<body style="background-color: white">
+
+		<!-- [加载状态 ] start -->
+		<div class="loader-bg">
+			<div class="loader-track">
+				<div class="loader-fill"></div>
+			</div>
+		</div>
+		<!-- [ 加载状态  ] End -->
+
+		<!-- [ 主内容区 ] start -->
+		<div class="pcoded-wrapper" id="app">
+			<div class="pcoded-content">
+				<div class="pcoded-inner-content">
+					<div class="main-body">
+						<div class="page-wrapper">
+							<!-- [ Main Content ] start -->
+							<div class="row">
+
+								<div style="width: 100%;">
+									<div id="showform">
+										<div class="input-group input-group-sm mb-3" style="margin-top: -10px;">
+											<div class="input-group-prepend">
+												<span class="input-group-text" style="width: 79px;"><span
+														style="width: 100%;">接口名称</span></span>
+											</div>
+											<input type="text" class="form-control" ref="INTERFACE_NAME"
+												id="INTERFACE_NAME" v-model="pd.INTERFACE_NAME" maxlength="255"
+												placeholder="这里输入接口名称" title="接口名称">
+										</div>
+										<div class="input-group input-group-sm mb-3" style="margin-top: -10px;">
+											<div class="input-group-prepend">
+												<span class="input-group-text" style="width: 79px;"><span
+														style="width: 100%;">接口类型</span></span>
+											</div>
+											<!-- <input type="text" class="form-control" ref="INTERFACE_TYPE"
+												id="INTERFACE_TYPE" v-model="pd.INTERFACE_TYPE" maxlength="255"
+												placeholder="这里输入接口类型" title="接口类型"> -->
+											<!-- <select class="form-control" name="">
+												<option value="select">查询</option>
+												<option value="update">更新</option>
+												<option value="insert">添加</option>
+												<option value="delete">删除</option>
+											</select> -->
+
+											<select class="form-control js-example-placeholder-multiple col-sm-12"
+												ref="INTERFACE_TYPE" id="INTERFACE_TYPE" data-placeholder="请选择接口类型">
+												<option value=""></option>
+												<template v-for="data in typeList">
+													<template v-if="data.value == pd.INTERFACE_TYPE">
+														<option v-bind:value="data.value" selected>
+															{{data.name}}
+														</option>
+													</template>
+													<template v-else>
+														<option v-bind:value="data.value">{{data.name}}
+														</option>
+													</template>
+												</template>
+											</select>
+
+
+
+										</div>
+										<div class="input-group input-group-sm mb-3" style="margin-top: -10px;">
+											<div class="input-group-prepend">
+												<span class="input-group-text" style="width: 79px;"><span
+														style="width: 100%;">接口SQL<i
+															class="fa fa-question-circle"></i></span></span>
+
+											</div>
+											<textarea rows="10" class="form-control" ref="INTERFACE_SQL"
+												id="INTERFACE_SQL" v-model="pd.INTERFACE_SQL" maxlength="5000"
+												placeholder="这里输入接口SQL" title="接口SQL"></textarea>
+
+										</div>
+										<div class="input-group input-group-sm mb-3" style="margin-top: -10px;">
+											<div class="input-group-prepend">
+												<span class="input-group-text" style="width: 79px;"><span
+														style="width: 100%;">接口SQL传递参数</span></span>
+											</div>
+											<input type="text" class="form-control" ref="INTERFACE_PARAM"
+												id="INTERFACE_PARAM" v-model="pd.INTERFACE_PARAM" maxlength="255"
+												placeholder="这里输入接口SQL传递参数" title="接口SQL传递参数">
+										</div>
+										<div class="input-group input-group-sm mb-3" style="margin-top: -10px;">
+											<div class="input-group-prepend">
+												<span class="input-group-text" style="width: 79px;"><span
+														style="width: 100%;">备注</span></span>
+											</div>
+											<input type="text" class="form-control" ref="INTERFACE_REMAKE"
+												id="INTERFACE_REMAKE" v-model="pd.INTERFACE_REMAKE" maxlength="255"
+												placeholder="这里输入备注" title="备注">
+										</div>
+										<div class="input-group" style="margin-top:10px;background-color: white">
+											<span style="width: 100%;text-align: center;">
+												<a class="btn btn-light btn-sm" v-on:click="save">保存</a>
+												<a class="btn btn-light btn-sm" onclick="top.Dialog.close()">取消</a>
+											</span>
+										</div>
+
+
+										<div id="iframe" style="height: 78vh;">
+											<div style="font-size: 20px;">
+												SQL编辑器
+											</div>
+											<iframe style="width: 100%;height: 100%;" id="myiframe" frameborder="no"
+												border="no" marginwidth="0" marginheight="0"
+												src="../../fhdb/sqledit/sql_edit.html" allowtransparency="yes">
+											</iframe>
+
+										</div>
+									</div>
+									<!-- [加载状态 ] start -->
+									<div id="jiazai" style="display:none;margin-top:50px;">
+										<div class="d-flex justify-content-center">
+											<div class="spinner-border" style="width: 3rem; height: 3rem;"
+												role="status">
+												<span class="sr-only">Loading...</span>
+											</div>
+										</div>
+									</div>
+									<!-- [ 加载状态  ] End -->
+								</div>
+
+							</div>
+							<!-- [ Main Content ] end -->
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- [ 主内容区 ] end -->
+
+		<script type="text/javascript" src="../../../assets/js/jquery-1.7.2.js"></script>
+		<script type="text/javascript" src="../../../assets/js/pre-loader.js"></script>
+		<script src="../../../assets/plugins/sweetalert/js/sweetalert.min.js"></script>
+
+		<!-- 日期插件 -->
+		<script src="../../../assets/js/pages/moment-with-locales.min.js"></script>
+		<script src="../../../assets/plugins/material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
+		<script src="../../../assets/js/pages/form-picker-custom.js"></script>
+
+		<!-- select插件 -->
+		<script src="../../../assets/plugins/select2/js/select2.full.min.js"></script>
+		<script src="../../../assets/plugins/multi-select/js/jquery.quicksearch.js"></script>
+		<script src="../../../assets/plugins/multi-select/js/jquery.multi-select.js"></script>
+		<script src="../../../assets/js/pages/form-select-custom.js"></script>
+
+		<!-- 表单验证提示 -->
+		<script src="../../../assets/js/jquery.tips.js"></script>
+
+		<script type="text/javascript">
+			var vm = new Vue({
+				el: '#app',
+				data: {
+					CODE_ID: '',
+					INTERFACE_ID: '', //主键ID
+					pd: [], //存放字段参数
+					msg: 'add',
+					typeList: [{
+						name: '查询',
+						value: 'select'
+					}, {
+						name: '更新',
+						value: 'update'
+					}, {
+						name: '添加',
+						value: 'insert'
+					}, {
+						name: '删除',
+						value: 'delete'
+					}, ]
+				},
+
+				methods: {
+
+					//初始执行
+					init() {
+						var FID = this.getUrlKey('FID'); //当接收过来的FID不为null时,表示此页面是修改进来的
+						let CODE_ID = this.getUrlKey('CODE_ID');
+						if (null != CODE_ID) {
+							this.CODE_ID = CODE_ID;
+						}
+						if (null != FID) {
+							this.msg = 'edit';
+							this.INTERFACE_ID = FID;
+							this.getData();
+						}
+
+						setTimeout(function() {
+							vm.getDict();
+						}, 200);
+					},
+
+					//去保存
+					save: function() {
+
+						this.pd.INTERFACE_TYPE = $("#INTERFACE_TYPE").val();
+
+						if (this.pd.INTERFACE_NAME == '' || this.pd.INTERFACE_NAME == undefined) {
+							$("#INTERFACE_NAME").tips({
+								side: 3,
+								msg: '请输入接口名称',
+								bg: '#AE81FF',
+								time: 2
+							});
+							this.pd.INTERFACE_NAME = '';
+							this.$refs.INTERFACE_NAME.focus();
+							return false;
+						}
+						if (this.pd.INTERFACE_TYPE == '' || this.pd.INTERFACE_TYPE == undefined) {
+							$("#INTERFACE_TYPE").tips({
+								side: 3,
+								msg: '请选择接口类型',
+								bg: '#AE81FF',
+								time: 2
+							});
+							this.pd.INTERFACE_TYPE = '';
+							this.$refs.INTERFACE_TYPE.focus();
+							return false;
+						}
+						if (this.pd.INTERFACE_SQL == '' || this.pd.INTERFACE_SQL == undefined) {
+							$("#INTERFACE_SQL").tips({
+								side: 3,
+								msg: '请输入接口SQL',
+								bg: '#AE81FF',
+								time: 2
+							});
+							this.pd.INTERFACE_SQL = '';
+							this.$refs.INTERFACE_SQL.focus();
+							return false;
+						}
+						// if (this.pd.INTERFACE_PARAM == '' || this.pd.INTERFACE_PARAM == undefined) {
+						// 	$("#INTERFACE_PARAM").tips({
+						// 		side: 3,
+						// 		msg: '请输入接口SQL传递参数',
+						// 		bg: '#AE81FF',
+						// 		time: 2
+						// 	});
+						// 	this.pd.INTERFACE_PARAM = '';
+						// 	this.$refs.INTERFACE_PARAM.focus();
+						// 	return false;
+						// }
+						// if (this.pd.INTERFACE_REMAKE == '' || this.pd.INTERFACE_REMAKE == undefined) {
+						// 	$("#INTERFACE_REMAKE").tips({
+						// 		side: 3,
+						// 		msg: '请输入备注',
+						// 		bg: '#AE81FF',
+						// 		time: 2
+						// 	});
+						// 	this.pd.INTERFACE_REMAKE = '';
+						// 	this.$refs.INTERFACE_REMAKE.focus();
+						// 	return false;
+						// }
+
+						$("#showform").hide();
+						$("#jiazai").show();
+
+						//发送 post 请求提交保存
+						$.ajax({
+							xhrFields: {
+								withCredentials: true
+							},
+							type: "POST",
+							url: httpurl + 'interface/' + this.msg,
+							data: {
+								INTERFACE_ID: this.INTERFACE_ID,
+								INTERFACE_NAME: this.pd.INTERFACE_NAME,
+								INTERFACE_TYPE: this.pd.INTERFACE_TYPE,
+								INTERFACE_SQL: this.pd.INTERFACE_SQL,
+								INTERFACE_PARAM: this.pd.INTERFACE_PARAM,
+								INTERFACE_REMAKE: this.pd.INTERFACE_REMAKE,
+								CODE_ID: this.CODE_ID,
+								tm: new Date().getTime()
+							},
+							dataType: "json",
+							success: function(data) {
+								if ("success" == data.result) {
+									swal("", "保存成功", "success");
+									setTimeout(function() {
+										top.Dialog.close(); //关闭弹窗
+									}, 1000);
+								} else if ("exception" == data.result) {
+									showException("接口列表管理", data.exception); //显示异常
+									$("#showform").show();
+									$("#jiazai").hide();
+								}
+							}
+						}).done().fail(function() {
+							swal("登录失效!", "请求服务器无响应，稍后再试", "warning");
+							$("#showform").show();
+							$("#jiazai").hide();
+						});
+					},
+
+					//根据主键ID获取数据
+					getData: function() {
+						//发送 post 请求
+						$.ajax({
+							xhrFields: {
+								withCredentials: true
+							},
+							type: "POST",
+							url: httpurl + 'interface/goEdit',
+							data: {
+								INTERFACE_ID: this.INTERFACE_ID,
+								tm: new Date().getTime()
+							},
+							dataType: "json",
+							success: function(data) {
+								if ("success" == data.result) {
+									vm.pd = data.pd; //参数map
+								} else if ("exception" == data.result) {
+									showException("接口列表管理", data.exception); //显示异常
+									$("#showform").show();
+									$("#jiazai").hide();
+								}
+							}
+						}).done().fail(function() {
+							swal("登录失效!", "请求服务器无响应，稍后再试", "warning");
+							$("#showform").show();
+							$("#jiazai").hide();
+						});
+					},
+
+					//获取数据字典数据
+					getDict: function() {},
+
+					//根据url参数名称获取参数值
+					getUrlKey: function(name) {
+						return decodeURIComponent(
+							(new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.href) || [,
+								""
+							])[1].replace(/\+/g, '%20')) || null;
+					}
+
+				},
+
+				mounted() {
+					this.init();
+				}
+			})
+		</script>
+
+	</body>
+</html>

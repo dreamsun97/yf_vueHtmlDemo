@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>FH Admin</title>
+		<!-- HTML5 Shim and Respond.js IE10 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 10]>
+		<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+		<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+		<![endif]-->
+		<!-- Meta -->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="author" content="FH Admin QQ313596790" />
+
+		<link rel="icon" href="../../../assets/images/favicon.ico" type="image/x-icon">
+		<link rel="stylesheet" href="../../../assets/fonts/fontawesome/css/fontawesome-all.min.css">
+		<link rel="stylesheet" href="../../../assets/plugins/animation/css/animate.min.css">
+		<link rel="stylesheet" href="../../../assets/css/style.css">
+
+		<link type="text/css" rel="stylesheet" href="../../../plugins/zTree/2.6/zTreeStyle.css" />
+		<link rel="stylesheet" href="//code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
+		<link rel="stylesheet" href="../../../assets/css/jquery.ui.ruler.css">
+		<link rel="stylesheet" href="../../../assets/css/jquery.minicolors.css" />
+		<!-- 日期插件 -->
+		<link rel="stylesheet"
+			href="../../../assets/plugins/material-datetimepicker/css/bootstrap-material-datetimepicker.css">
+
+		<!-- select插件 -->
+		<link rel="stylesheet" href="../../../assets/plugins/select2/css/select2.min.css">
+		<link rel="stylesheet" href="../../../assets/plugins/multi-select/css/multi-select.css">
+
+		<!-- vue -->
+		<script src="../../../assets/js-vue/vue.js"></script>
+		<!--全局配置-->
+		<script src="../../../assets/js-v/config.js"></script>
+
+		<style type="text/css">
+			.set-style {
+				padding: 0.375rem 0.75rem;
+			}
+
+			.drag {
+				position: absolute;
+				border-color: rgb(0, 0, 0);
+				/* opacity: 0.5; */
+				background: rgb(255 255 255 / 50%);
+				width: 150px;
+				height: 150px;
+			}
+
+			.left-content {
+				width: 100%;
+				height: 49%;
+				border: 1px solid #000;
+				overflow-y: scroll;
+			}
+
+			.left-content:last-child {
+				margin-top: 2%;
+			}
+
+			.custom-select,
+			.form-control {
+				padding: 0.375rem 0.75rem;
+			}
+
+			.ui-widget-content {
+				border: 0;
+			}
+
+			.canvas {
+				background-size: 100% 100%;
+				border: 0;
+				background-color: #ebe4e0;
+			}
+		</style>
+	</head>
+
+	<body style="background-color: white">
+
+		<!-- [加载状态 ] start -->
+		<div class="loader-bg">
+			<div class="loader-track">
+				<div class="loader-fill"></div>
+			</div>
+		</div>
+		<!-- [ 加载状态  ] End -->
+
+		<!-- [ 主内容区 ] start -->
+		<div class="pcoded-wrapper" id="app">
+
+
+
+			<div class="pcoded-content" style="padding-top: 0;padding-bottom: 0;">
+				<div class="pcoded-inner-content">
+					<div class="main-body">
+						<div class="page-wrapper">
+							<!-- [ Main Content ] start -->
+							<div class="row">
+								<table style="width: 100%;height: 100%;" border="1">
+									<tr>
+										<td rowspan="2" style="width: 280px;">
+
+											<div class="left-content" style="overflow-y: unset;">
+												<div style="text-align: center;margin-top: 5px;">
+													<button class="btn btn-mini btn-primary set-style" type="button"
+														v-on:click="delCanvas">删除选中的控件</button>
+												</div>
+
+												<ul id="leftTree" class="tree">
+													<li>
+														<button type="button" id="leftTree_1_ico" onfocus="this.blur();"
+															class="ico_open"></button>
+														<span id="leftTree_1_span">画布控件</span>
+													</li>
+													<div id="" style="overflow-y: scroll;height: 289px;">
+														<ul class="tree add-tree" style="margin-left: 10px;">
+
+														</ul>
+													</div>
+
+												</ul>
+											</div>
+											<div class="left-content">
+
+												<table id="t1" class="table-striped table-bordered table-hover"
+													style="width: 100%;">
+													<tbody>
+														<tr>
+															<td style="width: 80px;text-align: right;">宽度:</td>
+															<td>
+																<input class="form-control" type="text" name="width"
+																	id="width" value="" disabled="disabled"
+																	maxlength="5" style="width: 100%;border: 0;">
+															</td>
+														</tr>
+
+														<tr>
+															<td style="width: 80px;text-align: right;">高度:</td>
+															<td>
+																<input class="form-control" type="text" name="height"
+																	id="height" value="" disabled="disabled"
+																	maxlength="5" style="width: 100%;border: 0;">
+															</td>
+														</tr>
+
+														<tr>
+															<td style="width: 80px;text-align: right;">上边距:</td>
+															<td>
+																<input class="form-control" type="text"
+																	name="margin_top" id="margin_top" value=""
+																	disabled="disabled" maxlength="5"
+																	style="width: 100%;border: 0;">
+															</td>
+														</tr>
+
+														<tr>
+															<td style="width: 80px;text-align: right;">左边距:</td>
+															<td>
+																<input class="form-control" type="text"
+																	name="margin_left" id="margin_left" value=""
+																	disabled="disabled" maxlength="5"
+																	style="width: 100%;border: 0;">
+															</td>
+														</tr>
+													</tbody>
+													<tbody id="attr">
+													</tbody>
+												</table>
+
+											</div>
+										</td>
+
+
+										<td style="height:100px;" rowspan="1">
+											<a v-for="(data,index) in layoutList" v-bind:id="data.id"
+												v-on:click="addCanvas($event)"
+												class="btn btn-mini btn-success set-style"
+												v-bind:title="data.title">{{data.title}}</a>
+										</td>
+									</tr>
+									<tr>
+										<td rowspan="1" style="position: relative; height:640px">
+											<div id="ruler" style="width: 100%;height: 100%;">
+
+												<div id="showform" class="canvas" ref="canvas" id="canvas"
+													:style="{width:(pd.STENCIL_IS_ZOOM == 1?pd.STENCIL_WIDTH+'px':pd.STENCIL_WIDTH*pd.STENCIL_SCALE+'px'),height:(pd.STENCIL_IS_ZOOM == 1?pd.STENCIL_HEIGHT+'px':pd.STENCIL_HEIGHT*pd.STENCIL_SCALE+'px')}">
+
+												</div>
+											</div>
+										</td>
+									</tr>
+								</table>
+
+								<div id="" class="btn btn-primary" @click="attrSave"
+									style="width: 220px;margin: 0 auto;margin-top: 5px;">
+									保存
+								</div>
+
+
+
+								<div style="width: 100%;">
+									<!-- [加载状态 ] start -->
+									<div id="jiazai" style="display:none;margin-top:50px;">
+										<div class="d-flex justify-content-center">
+											<div class="spinner-border" style="width: 3rem; height: 3rem;"
+												role="status">
+												<span class="sr-only">Loading...</span>
+											</div>
+										</div>
+									</div>
+									<!-- [ 加载状态  ] End -->
+								</div>
+
+							</div>
+							<!-- [ Main Content ] end -->
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- [ 主内容区 ] end -->
+
+
+
+		<!-- <script type="text/javascript" src="../../../assets/js/jquery-1.7.2.js"></script> -->
+		<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+		<script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
+
+		<script type="text/javascript" src="../../../assets/js/jquery.ui.ruler.js"></script>
+
+		<script type="text/javascript" src="../../../assets/js/jquery.minicolors.js"></script>
+		<script type="text/javascript" src="../../../assets/js/jquery.minicolors.min.js"></script>
+
+		<script type="text/javascript" src="../../../assets/js/pre-loader.js"></script>
+		<script src="../../../assets/plugins/sweetalert/js/sweetalert.min.js"></script>
+
+		<script type="text/javascript" src="../../../assets/js/stencil_attr.js"></script>
+		<!-- 日期插件 -->
+		<script src="../../../assets/js/pages/moment-with-locales.min.js"></script>
+		<script src="../../../assets/plugins/material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
+		<script src="../../../assets/js/pages/form-picker-custom.js"></script>
+
+		<!-- select插件 -->
+		<script src="../../../assets/plugins/select2/js/select2.full.min.js"></script>
+		<script src="../../../assets/plugins/multi-select/js/jquery.quicksearch.js"></script>
+		<script src="../../../assets/plugins/multi-select/js/jquery.multi-select.js"></script>
+		<script src="../../../assets/js/pages/form-select-custom.js"></script>
+
+		<!-- 表单验证提示 -->
+		<script src="../../../assets/js/jquery.tips.js"></script>
+
+		<script type="text/javascript">
+			var vm = new Vue({
+				el: '#app',
+
+				data: {
+					selectDIV: '',
+					num: 1,
+					divStyle: {},
+					STENCIL_ID: '', //主键ID
+					pd: [], //存放字段参数
+					layoutList: [{
+						id: 'KEY_BASIC_CALL',
+						title: '普通叫号'
+					}, {
+						id: 'KEY_OPEN_CALL',
+						title: '弹出叫号'
+					}, {
+						id: 'KEY_QUE_WAIT',
+						title: '队列等候'
+					}, {
+						id: 'KEY_ROOM_WAIT',
+						title: '诊室等候'
+					}, {
+						id: 'KEY_ALL_WAIT',
+						title: '综合等候'
+					}, {
+						id: 'KEY_QUE_COUNT',
+						title: '队列等候人数'
+					}, {
+						id: 'KEY_ROOM_COUNT',
+						title: '诊室等候人数'
+					}, {
+						id: 'KEY_WORKER_INFO',
+						title: '医生信息'
+					}, {
+						id: 'KEY_IMG_LIST',
+						title: '广告图片'
+					}, {
+						id: 'KEY_VIDEO_LIST',
+						title: '广告视频'
+					}, {
+						id: 'KEY_TIME_NOW',
+						title: '时间区域'
+					}, {
+						id: 'KEY_TXT_SCROLL',
+						title: '滚动字幕'
+					}, {
+						id: 'KEY_NOTICE_INFO',
+						title: '公告信息'
+					}]
+				},
+
+
+				methods: {
+
+					//初始执行
+					init() {
+
+
+						var FID = this.getUrlKey('FID'); //接收过来的FID
+						if (null != FID) {
+							this.STENCIL_ID = FID;
+							this.getData();
+							this.getCanvaData();
+						}
+
+						$(document).on('mousemove', '.drag', function() {
+							$(this).draggable({
+								containment: "parent",
+								drag: function(event, ui) {
+									$("#margin_top").val($(this).position().top);
+									$("#margin_left").val($(this).position().left);
+								}
+							});
+							$(this).resizable({
+								minHeight: 50,
+								minWidth: 50,
+								containment: "#showform",
+								resize: function(event, ui) {
+									$("#width").val($(this).width());
+									$("#height").val($(this).height());
+								}
+							});
+						});
+
+						// 加载模板
+						loadTemplate();
+					},
+
+					// 添加组件
+					addCanvas: function(event) {
+						let title = event.target.title;
+						let id = event.target.id;
+						let aId = id + this.num;
+						let titleId = title + this.num;
+
+						let canvasHtml = `<div id="${aId}" name="${id}" onclick="selectDiv('${aId}')" class="drag ui-widget-content">
+											<p>${title+this.num}</p>
+										</div>`;
+						$(".canvas").append(canvasHtml);
+
+						let treeHtml = `<li id="li${aId}" onclick="selectDiv('${aId}')">
+											<button type="button" onfocus="this.blur();"
+												class="ico_docu"></button>
+												<span id="leftTree_6_span">${titleId}</span>
+											</li>`;
+						$(".add-tree").append(treeHtml);
+						this.num++;
+					},
+
+
+					// 选择组件
+					selectDiv: function(event) {
+						let selectId = event;
+
+						vm.selectDIV = event;
+						$(".canvas div").css('color', '#000');
+						$(".canvas div").css('borderColor', '#000');
+
+						$(".tree li").css('color', '#000');
+						$(".tree li").css('borderColor', '#000');
+
+						$("#" + selectId).css('color', '#f00');
+						$("#" + selectId).css('borderColor', '#f00');
+
+						$("#li" + selectId).css('color', '#f00');
+						$("#li" + selectId).css('borderColor', '#f00');
+
+
+						$("#width").val($("#" + selectId).width());
+						$("#height").val($("#" + selectId).height());
+						$("#margin_top").val($("#" + selectId).position().top);
+						$("#margin_left").val($("#" + selectId).position().left);
+
+
+						//根据name添加对应属性
+						addAttrs("#" + selectId);
+
+						attrDatas("#" + selectId);
+
+						attrChange("#" + selectId);
+
+					},
+
+
+
+
+					// 删除控件和列表
+					delCanvas: function() {
+						if (vm.selectDIV != "") {
+							console.log(vm.selectDIV);
+							$("#li" + vm.selectDIV).remove()
+							$("#" + vm.selectDIV).remove()
+							$("#attr").html("");
+							$("#width").val(0);
+							$("#height").val(0);
+							$("#margin_top").val(0);
+							$("#margin_left").val(0);
+							vm.selectDIV = "";
+							swal({
+								title: "提示",
+								text: "删除成功！",
+								type: "success",
+								showCancelButton: false,
+								showConfirmButton: true,
+								timer: 2000,
+							})
+						} else {
+							swal({
+								title: "提示",
+								text: "请选择控件进行删除！",
+								type: "warning",
+								showCancelButton: false,
+								showConfirmButton: true,
+								timer: 2000,
+							})
+						}
+					},
+
+
+					// getStyle: function() {
+					// 	return {
+					// 		width: this.pd.STENCIL_WIDTH + 'px',
+					// 		height: this.pd.STENCIL_HEIGHT + 'px'
+					// 	}
+					// },
+
+
+					getData: function() {
+						let that = this;
+						$.ajax({
+							xhrFields: {
+								withCredentials: true
+							},
+							type: "POST",
+							url: httpurl + 'stencil/goView',
+							data: {
+								STENCIL_ID: this.STENCIL_ID,
+								tm: new Date().getTime()
+							},
+							dataType: "json",
+							success: function(data) {
+								if ("success" == data.result) {
+									data.pd.STENCIL_BACKGROUND = httpurl + data.pd.STENCIL_BACKGROUND;
+									vm.pd = data.pd; //参数map
+									console.log(that.$refs);
+
+									that.$refs.canvas.style.background =
+										`url(${data.pd.STENCIL_BACKGROUND})`;
+									that.$refs.canvas.style.backgroundSize = '100% 100%';
+
+									if (data.pd.STENCIL_IS_SCALEPLATE == 0) {
+										setTimeout(function() {
+											$("#ruler").ruler();
+										}, 500);
+									}
+
+									// setTimeout(function() {
+
+									// }, 1000);
+
+								} else if ("exception" == data.result) {
+									showException("模板列表", data.exception); //显示异常
+									$("#showform").show();
+									$("#jiazai").hide();
+								}
+							}
+						}).done().fail(function() {
+							swal("登录失效!", "请求服务器无响应，稍后再试", "warning");
+							$("#showform").show();
+							$("#jiazai").hide();
+						});
+					},
+
+					// 数据回显
+					getCanvaData: function() {
+						$.ajax({
+							xhrFields: {
+								withCredentials: true
+							},
+							type: "POST",
+							url: httpurl + 'stencil/canvaData',
+							data: {
+								STENCIL_ID: this.STENCIL_ID,
+								tm: new Date().getTime()
+							},
+							dataType: "json",
+							success: function(data) {
+								if ("success" == data.result) {
+									let canvasData = JSON.stringify(data.pd);
+									canvasData = canvasData.replace(/\//g, "").replace(/\"\[/g, "\[")
+										.replace(/\]\"/g, "\]").replace(/\"{\"/g, "{\"").replace(
+											/\"}\"/g, "\"}").replace(/\\\"/g, '"').replace('"{', '{');
+
+									// console.log(canvasData);
+
+
+									var json = eval("(" + canvasData + ")");
+									// console.log(json);
+									for (var i = 0; i < json.length; i++) {
+										vm.num = (parseInt(json[i].WIDGET_NAME.replace(json[i]
+												.WIDGET_TYPE, "")) >= vm.num ? parseInt(json[i]
+												.WIDGET_NAME.replace(json[i].WIDGET_TYPE, "")) + 1 :
+											vm.num);
+
+										let title = $("#" + (json[i].WIDGET_TYPE)).attr("title") + json[
+											i].WIDGET_NAME.replace(json[i].WIDGET_TYPE, "")
+
+
+										if (vm.pd.STENCIL_IS_ZOOM == 0) {
+
+											json[i].WIDGET_WIDTH = json[i].WIDGET_WIDTH * vm.pd
+												.STENCIL_SCALE;
+											json[i].WIDGET_HEIGHT = json[i].WIDGET_HEIGHT * vm.pd
+												.STENCIL_SCALE;
+											json[i].WIDGET_MARGIN_LEFT = json[i].WIDGET_MARGIN_LEFT * vm
+												.pd.STENCIL_SCALE;
+											json[i].WIDGET_MARGIN_TOP = json[i].WIDGET_MARGIN_TOP * vm.pd
+												.STENCIL_SCALE;
+										}
+
+										// console.log(vm.pd.STENCIL_SCALE);
+
+										let canvasHtml = `<div style="width:${Math.round(json[i].WIDGET_WIDTH)+'px'};height:${Math.round(json[i].WIDGET_HEIGHT)+'px'};left:${Math.round(json[i].WIDGET_MARGIN_LEFT)+'px'};top:${Math.round(json[i].WIDGET_MARGIN_TOP)+'px'}" id="${json[i].WIDGET_NAME}" name="${json[i]
+												.WIDGET_TYPE}" widget_id="${json[i].WIDGET_ID}" onclick="selectDiv('${json[i].WIDGET_NAME}')" class="drag ui-widget-content" data-attr='${JSON.stringify(json[i].attr)}'>
+															<p>${title}</p>
+														</div>`;
+										$(".canvas").append(canvasHtml);
+
+										let treeHtml = `<li id="li${json[i].WIDGET_NAME}" onclick="selectDiv('${json[i].WIDGET_NAME}')">
+															<button type="button" onfocus="this.blur();"
+																class="ico_docu"></button>
+																<span id="leftTree_6_span">${title}</span>
+															</li>`;
+										$(".add-tree").append(treeHtml);
+									}
+								} else if ("exception" == data.result) {
+									showException("模板列表", data.exception); //显示异常
+									$("#showform").show();
+									$("#jiazai").hide();
+								}
+							}
+						}).done().fail(function() {
+							swal("登录失效!", "请求服务器无响应，稍后再试", "warning");
+							$("#showform").show();
+							$("#jiazai").hide();
+						});
+					},
+
+
+					//保存属性
+					attrSave: function() {
+						var parameters = new Array();
+						$(".canvas div.drag").each(function() {
+							var parameter = {};
+							parameter["WIDGET_NAME"] = this.id;
+							parameter["WIDGET_TYPE"] = $(this).attr("name");
+							parameter["STENCIL_ID"] = vm.STENCIL_ID;
+							parameter["WIDGET_ID"] = $(this).attr("widget_id");
+							parameter["attr"] = $(this).attr("data-attr");
+							if (vm.pd.STENCIL_IS_ZOOM == 0) {
+								parameter["WIDGET_WIDTH"] = Math.round(($(this).width()) / vm.pd
+									.STENCIL_SCALE);
+								parameter["WIDGET_HEIGHT"] = Math.round(($(this).height()) / vm.pd
+									.STENCIL_SCALE);
+								parameter["WIDGET_MARGIN_TOP"] = Math.round(($(this).position().top) / vm.pd
+									.STENCIL_SCALE);
+								parameter["WIDGET_MARGIN_LEFT"] = Math.round(($(this).position().left) / vm
+									.pd
+									.STENCIL_SCALE);
+							} else {
+								parameter["WIDGET_WIDTH"] = $(this).width()
+								parameter["WIDGET_HEIGHT"] = $(this).height()
+								parameter["WIDGET_MARGIN_TOP"] = $(this).position().top
+								parameter["WIDGET_MARGIN_LEFT"] = $(this).position().left
+							}
+							parameters.push(parameter)
+						});
+
+						console.log(parameters);
+
+						$.ajax({
+							xhrFields: {
+								withCredentials: true
+							},
+							type: "POST",
+							url: httpurl + 'stencil/saveCanvas',
+							data: {
+								parameter: JSON.stringify(parameters),
+								STENCIL_ID: this.STENCIL_ID,
+							},
+							dataType: "json",
+							success: function(data) {
+								if ("success" == data.result) {
+									swal("", "保存成功", "success");
+									setTimeout(function() {
+										top.Dialog.close(); //关闭弹窗
+									}, 1000);
+								} else if ("exception" == data.result) {
+									showException("失败", data.exception); //显示异常
+									$("#showform").show();
+									$("#jiazai").hide();
+								}
+							}
+						}).done().fail(function() {
+							swal("登录失效!", "请求服务器无响应，稍后再试", "warning");
+							$("#showform").show();
+							$("#jiazai").hide();
+						});
+						// $("#showform").hide();
+						// $("#jiazai").show();
+						// $.ajax({
+						// 	type: "POST",
+						// 	url: "widget/saveCanvas",
+						// 	data: {
+						// 		parameter: JSON.stringify(parameters),
+						// 		stencil_id: $("#stencil_id").val()
+						// 	},
+						// 	datatype: "json",
+						// 	error: function(request) {},
+						// 	success: function(data) {
+						// 		top.Dialog.close();
+						// 	}
+						// });
+					},
+
+					editAttr: function() {
+						let column = $("#column").val();
+						let gsmb = $("#gsmb").val();
+						let postGsmb = "";
+						if (gsmb != "") {
+							let jsonGsmb = eval("(" + gsmb + ")");
+							for (var key in jsonGsmb) {
+								postGsmb += "&" + key + "=" + jsonGsmb[key];
+							}
+						}
+						
+						var diag = new top.Dialog();
+						diag.Drag = true;
+						diag.Title = "管理";
+						diag.URL = '../../infd/stencil/stencil_attr.html?column=' + column + postGsmb;
+						diag.Width = 1000;
+						diag.Height = 500;
+						diag.Modal = true; //有无遮罩窗口
+						diag.ShowMaxButton = true; //最大化按钮
+						diag.ShowMinButton = true; //最小化按钮 
+						diag.CancelEvent = function() { //关闭事件
+							$("#gsmb").val(diag.innerFrame.contentWindow.document.getElementById('gsmb')
+								.value);
+							$("#gsmb").change();
+							console.log(12212121);
+							diag.close();
+							
+						};
+						diag.show();
+
+					},
+
+
+					//根据url参数名称获取参数值
+					getUrlKey: function(name) {
+						return decodeURIComponent(
+							(new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.href) || [,
+								""
+							])[1].replace(/\+/g, '%20')) || null;
+					}
+				},
+
+
+
+				created() {
+					window.selectDiv = this.selectDiv;
+					window.editAttr = this.editAttr;
+				},
+
+				mounted() {
+					this.init();
+				}
+			})
+		</script>
+
+	</body>

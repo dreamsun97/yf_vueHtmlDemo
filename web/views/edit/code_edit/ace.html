@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>编辑器</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="author" content="FH Admin QQ313596790" />
+
+
+		<script src="https://cdn.bootcdn.net/ajax/libs/ace/test/ace.js"></script>
+		<script src="https://cdn.bootcdn.net/ajax/libs/ace/test/theme-monokai.js"></script>
+		<script src="https://cdn.bootcdn.net/ajax/libs/ace/test/mode-javascript.js"></script>
+		<script src="https://cdn.bootcdn.net/ajax/libs/ace/test/mode-html.js"></script>
+		<script src="./js/ext-language_tools.js"></script>
+
+		<link rel="icon" href="../../../assets/images/favicon.ico" type="image/x-icon">
+		<link rel="stylesheet" href="../../../assets/fonts/material/css/materialdesignicons.min.css">
+		<link rel="stylesheet" href="../../../assets/fonts/fontawesome/css/fontawesome-all.min.css">
+		<link rel="stylesheet" href="../../../assets/plugins/animation/css/animate.min.css">
+		<link rel="stylesheet" href="../../../assets/css/style.css">
+
+		<!-- vue -->
+		<script src="../../../assets/js-vue/vue.js"></script>
+		<!--全局配置-->
+		<script src="../../../assets/js-v/config.js"></script>
+
+
+
+		<!-- <script src="./js/ace.js"></script>
+		<script src="./js/theme-monokai.js"></script>
+		<script src="./js/mode-javascript.js"></script>
+		<script src="./js/mode-html.js"></script> -->
+
+		<style type="text/css">
+			#test {
+				width: 47%;
+				height: 100%;
+				border: 1px solid #d6d6d6;
+				box-sizing: border-box;
+			}
+
+			#myiframe {
+				width: 100%;
+				height: 100%;
+
+			}
+
+			#content {
+				width: 100%;
+				height: 100vh;
+				display: flex;
+				justify-content: space-between;
+				1
+			}
+
+			#editorHtml {
+				width: 45%;
+				height: 100%;
+			}
+
+			body,
+			html {
+				margin: 0;
+				padding: 0;
+			}
+
+			#center {
+				width: 8%;
+				height: 100%;
+				background: #e8e8e8;
+			}
+
+			.btn {
+				padding: 0.375rem 0.75rem;
+				margin-left: 10px;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="app">
+			<div id="content">
+
+				<div id="editorHtml">
+
+				</div>
+
+				<div id="center">
+
+					<button type="button" class="btn btn-primary" @click="setCode()">渲染</button>
+					<br />
+					<button type="button" class="btn btn-primary" @click="saveCode()">保存</button>
+					<br />
+					<button type="button" class="btn btn-primary" @click="uploadFile()">上传资源文件</button>
+					<br />
+					<button type="button" class="btn btn-primary" @click="fileList()">资源文件列表</button>
+				</div>
+
+
+
+				<div id="test">
+					<iframe id="myiframe" frameborder="no" border="no" marginwidth="0" marginheight="0"
+						allowtransparency="yes">
+
+					</iframe>
+					
+					
+
+				</div>
+			</div>
+		</div>
+
+
+		<script type="text/javascript" src="../../../assets/js/jquery-1.7.2.js"></script>
+		<script type="text/javascript" src="../../../assets/js/pre-loader.js"></script>
+		<script src="../../../assets/plugins/sweetalert/js/sweetalert.min.js"></script>
+		<!-- 表单验证提示 -->
+		<script src="../../../assets/js/jquery.tips.js"></script>
+
+		<script>
+			var vm = new Vue({
+				el: '#app',
+
+				data: {
+					editorHtml: '',
+					a: '',
+					EDIT_ID:'13'
+				},
+				methods: {
+					init() {
+						// 初始化编辑器
+						this.setEdit();
+
+						// 根据模板ID获取模板内容
+						this.getData();
+
+					},
+
+					// 获取模板内容，当不存在模板ID时，加载默认模板，当存在时通过模板ID查询模板中的数据进行渲染
+					getData() {
+						$.ajax({
+							xhrFields: {
+								withCredentials: true
+							},
+							type: "POST",
+							url: httpurl + 'edit/getCode',
+							data: {
+								EDIT_ID: this.EDIT_ID
+							},
+							dataType: 'json',
+							success: function(data) {
+								if ("success" == data.result) {
+									if (vm.EDIT_ID != "0") {
+										vm.editorHtml.setValue(data.pd.EDIT_CODE);
+									} else {
+										vm.editorHtml.setValue(data.code);
+									}
+
+								} else if ("exception" == data.result) {
+									console.log(data.result);
+								}
+							}
+						}).done().fail(function() {
+
+						});
+					},
+
+					//上传资源文件
+					uploadFile() {
+						console.log("上传资源文件");
+					},
+
+					//查看资源文件列表
+					fileList() {
+						console.log("查看资源文件列表");
+					},
+
+					// 初始化编辑器
+					setEdit() {
+						$("#editorHtml").css("font-size", "16px");
+						ace.require("ace/ext/language_tools");
+						this.editorHtml = ace.edit("editorHtml");
+						this.editorHtml.getSession().setUseWrapMode(true);
+						this.editorHtml.setHighlightActiveLine(false);
+						this.editorHtml.setTheme("ace/theme/monokai");
+						this.editorHtml.resize()
+						this.editorHtml.session.setMode("ace/mode/html");
+						this.editorHtml.setOptions({
+							enableBasicAutocompletion: true,
+							enableSnippets: true,
+							enableLiveAutocompletion: true
+						});
+
+						// 监听编辑器输入
+						this.editorHtml.getSession().on('change', this.changeCode);
+					},
+
+
+					// 编辑器输入监听事件实现
+					changeCode() {
+						// 防止频繁渲染数据
+						if (this.a != null) {
+							window.clearTimeout(this.a);
+						}
+						this.a = setTimeout(() => {
+							vm.setCode();
+
+							vm.saveCode()
+						}, 1500);
+					},
+
+
+					// 保存代码到数据库
+					saveCode() {
+						let editCode = this.editorHtml.getValue();
+						$.ajax({
+							xhrFields: {
+								withCredentials: true
+							},
+							type: "POST",
+							url: httpurl + 'edit/edit',
+							data: {
+								EDIT_CODE: editCode,
+								EDIT_TYPE: 1,
+								EDIT_ID: this.EDIT_ID
+							},
+							dataType: 'json',
+							success: function(data) {
+								if ("success" == data.result) {
+									// vm.editorHtml.setValue(data.code);
+									console.log(data);
+								} else if ("exception" == data.result) {
+									console.log(data.result);
+								}
+							}
+						}).done().fail(function() {
+
+						});
+
+					},
+
+					// 渲染页面
+					setCode() {
+						let iframe = document.getElementById('myiframe');
+						var e2 = this.editorHtml.getValue();
+						iframe.contentWindow.document.open();
+						iframe.contentWindow.document.write(e2)
+						iframe.contentWindow.document.close();
+					}
+				},
+				mounted() {
+					this.init();
+				}
+			})
+		</script>
+	</body>
+
+</html>
